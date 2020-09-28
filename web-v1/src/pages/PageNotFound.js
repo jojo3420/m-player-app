@@ -1,14 +1,16 @@
-import React, { useCallback } from 'react';
-import MyLayout from 'components/layout/MyLayout';
-import { Button } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useCallback } from 'react'
+import MyLayout from 'components/layout/MyLayout'
+import { Button } from 'antd'
+import { useHistory, useLocation } from 'react-router-dom'
+import useTitle from 'lib/hooks/useTitle'
 
 function PageNotFound({}) {
-  const history = useHistory();
-  const location = useLocation();
+  useTitle('NOT FOUND')
+  const history = useHistory()
+  const location = useLocation()
   const gotoHome = useCallback(() => {
-    history.push('/');
-  }, [history]);
+    history.push('/')
+  }, [history])
 
   return (
     <MyLayout>
@@ -16,7 +18,7 @@ function PageNotFound({}) {
       <p>path: {location.pathname}</p>
       <Button onClick={gotoHome}>Home</Button>
     </MyLayout>
-  );
+  )
 }
 
-export default PageNotFound;
+export default PageNotFound

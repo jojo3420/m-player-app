@@ -1,10 +1,10 @@
-import React from 'react';
-import PlayerContainer from "containers/palyer/PlayerContainer";
+import React from 'react'
+import PlayerContainer from 'containers/palyer/PlayerContainer'
+import useTitle from 'lib/hooks/useTitle'
 
 function PlayerPage() {
-  return (
-    <PlayerContainer />
-  );
+  useTitle('Player')
+  return <PlayerContainer />
 }
 
-export default PlayerPage;
+export default PlayerPage

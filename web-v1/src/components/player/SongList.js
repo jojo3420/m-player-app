@@ -13,14 +13,15 @@ import React from 'react'
 // {/*  /!*</div>*!/*/}
 // {/*</div>*/}
 
-function SongList({ list, onChangePlaySong }) {
+function SongList({ list, audioRef, onChangePlaySong }) {
   return (
     <div className="list">
       {Array.isArray(list) &&
         list.map((item, i) => (
           <SongItem
-            key={item.title + i}
+            key={item.songTitle + i}
             {...item}
+            audioRef={audioRef}
             onChangePlaySong={onChangePlaySong}
           />
         ))}
@@ -33,16 +34,21 @@ const SongItem = ({
   audio,
   songTitle,
   artist,
+  audioRef,
   onChangePlaySong,
 }) => {
   return (
     <div
       className="item"
-      onClick={onChangePlaySong.bind(this, {
-        audio,
-        songTitle,
-        artist,
-      })}
+      onClick={onChangePlaySong.bind(
+        this,
+        {
+          audio,
+          songTitle,
+          artist,
+        },
+        audioRef,
+      )}
     >
       <div className="thumbnail item_thumbnail">
         <img src={thumbnail} alt="song-thumbnail" />

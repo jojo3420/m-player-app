@@ -1,8 +1,8 @@
-import React, {useRef} from 'react'
+import React, { useRef } from 'react'
 import SongList from 'components/player/SongList'
 import styled from 'styled-components'
-import sampleImg from 'resouces/img/sample-album.jpg'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import ReactAudioPlayer from 'react-audio-player'
 import {
   faForward,
   faPlay,
@@ -15,58 +15,58 @@ import PropTypes from 'prop-types'
 
 Player.propTypes = {
   songList: PropTypes.array.isRequired,
+  currentIdx: PropTypes.number.isRequired,
   isPlay: PropTypes.bool,
   isListShow: PropTypes.bool,
   handlePlaylistVisible: PropTypes.func,
-  onPrevSong: PropTypes.func,
   onPlaySong: PropTypes.func,
-  onNextSong: PropTypes.func,
+  onStopSong: PropTypes.func,
+  onNextPrevSong: PropTypes.func,
   onChangePlaySong: PropTypes.func,
 }
 
 function Player({
-                  currentSong,
-                  songList,
-                  isPlay,
-                  isListVisible,
-                  handlePlaylistVisible,
-                  onPrevSong,
-                  onPlaySong,
-                  onStopSong,
-                  onNextSong,
-                  onChangePlaySong,
-                }) {
+  songList,
+  currentIdx,
+  isPlay,
+  isListVisible,
+  handlePlaylistVisible,
+  onPlaySong,
+  onStopSong,
+  onNextPrevSong,
+  onChangePlaySong,
+}) {
   const ref = useRef()
+  const currentSong = songList[currentIdx] || {}
+  const { songTitle, artist, thumbnail, audio, format } = currentSong || {}
 
   return (
     <PlayerMain className={`player`}>
       <div className="main">
-        <audio
-          alt="audio player"
-          src={currentSong}
-          ref={ref}
-          preload={true}
-
-        />
+        <audio alt="audio player" src={audio} ref={ref} preload={true}>
+          {/*<source src={audio} type={format} />*/}
+          Your browser does not support the <code>audio</code> element.
+        </audio>
+        {/*<ReactAudioPlayer*/}
+        {/*  src={audio}*/}
+        {/*  preload={true}*/}
+        {/*  controls={true}*/}
+        {/*  ref={ref}*/}
+        {/*/>*/}
         <div className="thumbnail">
-          <img src={sampleImg} height={300} alt="thumbnail"/>
+          <img src={thumbnail} height={300} alt="thumbnail" />
         </div>
         <div className="seekbar">
-          <input type="range"
-                 value={5}
-                 step={1}
-                 min={1}
-                 max={50}
-          />
+          <input type="range" value={5} step={1} min={1} max={50} />
         </div>
         <div className="details">
-          <h2 className="active-song-name">Song name</h2>
-          <p className="active-artist-name">artist name</p>
+          <h2 className="active-song-name">{songTitle}</h2>
+          <p className="active-artist-name">{artist}</p>
         </div>
         <div className="controls">
           <div className="prev-control">
             <FontAwesomeIcon
-              onClick={onPrevSong}
+              onClick={onNextPrevSong.bind(null, ref, -1)}
               className="icon"
               icon={faBackward}
             />
@@ -88,7 +88,7 @@ function Player({
           </div>
           <div className="next-control">
             <FontAwesomeIcon
-              onClick={onNextSong}
+              onClick={onNextPrevSong.bind(null, ref, +1)}
               className="icon"
               icon={faForward}
             />
@@ -97,7 +97,7 @@ function Player({
       </div>
       <div
         className="player-list"
-        style={isListVisible ? {marginTop: -350} : {}}
+        style={isListVisible ? { marginTop: -350 } : {}}
       >
         <div className="toggle-list" onClick={handlePlaylistVisible}>
           {!isListVisible ? (
@@ -112,18 +112,11 @@ function Player({
             />
           )}
         </div>
-        {/*<div className="song-list">*/}
-        {/*  /!*<div className="item">*!/*/}
-        {/*  /!*  <div className="thumbnail">*!/*/}
-        {/*  /!*    <img src={null} alt="thumbnail-list" />*!/*/}
-        {/*  /!*  </div>*!/*/}
-        {/*  /!*  <div className="details">*!/*/}
-        {/*  /!*    <h2>song name1</h2>*!/*/}
-        {/*  /!*    <p>artist name 1</p>*!/*/}
-        {/*  /!*  </div>*!/*/}
-        {/*  /!*</div>*!/*/}
-        {/*</div>*/}
-        <SongList list={songList} onChangePlaySong={onChangePlaySong}/>
+        <SongList
+          list={songList}
+          onChangePlaySong={onChangePlaySong}
+          audioRef={ref}
+        />
       </div>
     </PlayerMain>
   )
