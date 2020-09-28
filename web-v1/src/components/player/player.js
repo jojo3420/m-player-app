@@ -11,11 +11,8 @@ import {
   faAngleUp,
   faAngleDown,
   faVolumeMute,
-  faVolumeDown,
   faVolumeUp,
-  // faMusic,
-  // faBell,
-  // faBellSlash,
+  faVolumeDown,
 } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 
@@ -26,8 +23,9 @@ Player.propTypes = {
   isListShow: PropTypes.bool,
   volume: PropTypes.number,
   muted: PropTypes.bool,
-  volumeVisible: PropTypes.bool,
-  setVolumeVisible: PropTypes.func,
+  seeking: PropTypes.number,
+  durationSecond: PropTypes.number,
+  handleSeek: PropTypes.func,
   handlePlaylistVisible: PropTypes.func,
   handleSongMute: PropTypes.func,
   handleSongVolume: PropTypes.func,
@@ -44,8 +42,10 @@ function Player({
   isListVisible,
   volume,
   muted,
-  volumeVisible,
-  setVolumeVisible,
+  seeking,
+  durationSecond,
+  handleSeek,
+  setIsSeek,
   handlePlaylistVisible,
   handleSongMute,
   handleSongVolume,
@@ -55,10 +55,10 @@ function Player({
   onChangePlaySong,
 }) {
   const currentSong = songList[currentIdx] || {}
-  const { songTitle, artist, thumbnail, audio, format } = currentSong || {}
+  const { songTitle, artist, thumbnail } = currentSong || {}
 
   return (
-    <PlayerMain className={`player`}>
+    <PlayerMain className="player">
       <div className="main">
         <audio alt="audio player">
           Your browser does not support the <code>audio</code> element.
@@ -68,7 +68,16 @@ function Player({
           <img src={thumbnail} height={270} alt="thumbnail" />
         </div>
         <div className="seekbar">
-          <input type="range" value={30} step={1} min={0} max={100} />
+          <input
+            type="range"
+            value={seeking}
+            step={1}
+            min={0}
+            max={durationSecond}
+            onChange={handleSeek}
+            onMouseDown={() => setIsSeek(true)}
+            onMouseUp={() => setIsSeek(false)}
+          />
         </div>
         <div className="details">
           <h2 className="active-song-name">{songTitle}</h2>
@@ -78,7 +87,7 @@ function Player({
           <div className="prev-control">
             <FontAwesomeIcon
               onClick={onNextPrevSong.bind(null, -1)}
-              className="icon"
+              className="icon prev"
               icon={faBackward}
             />
           </div>
@@ -100,7 +109,7 @@ function Player({
           <div className="next-control">
             <FontAwesomeIcon
               onClick={onNextPrevSong.bind(null, +1)}
-              className="icon"
+              className="icon next"
               icon={faForward}
             />
           </div>
@@ -108,23 +117,19 @@ function Player({
             <FontAwesomeIcon
               icon={muted ? faVolumeMute : faVolumeUp}
               onClick={handleSongMute}
-              className="icon mute"
+              className="icon muted"
             />
           </div>
         </div>
-        <div
-          className="volume-slider"
-          onMouseEnter={() => setVolumeVisible(true)}
-          onMouseLeave={() => setVolumeVisible(false)}
-        >
+        <div className="volume-slider">
           {/*<FontAwesomeIcon icon={faVolumeUp} className="icon" />*/}
           {true && (
             <input
               type="range"
               value={volume}
-              step={0.01}
+              step={1}
               min={0}
-              max={1}
+              max={100}
               onChange={handleSongVolume}
             />
           )}
@@ -186,7 +191,7 @@ const PlayerMain = styled.section`
     input[type='range'] {
       -webkit-appearance: none;
       width: 100%;
-      height: 4px;
+      height: 5px;
       outline: none;
       background: #aaa;
       overflow: hidden;
@@ -196,7 +201,6 @@ const PlayerMain = styled.section`
     -webkit-appearance: none;
     width: 0;
     height: 0;
-    //box-shadow: -300px 0 0 300px #00acee;
     box-shadow: -300px 0 0 300px ${palette.blue[6]};
   }
   .volume-slider {
@@ -210,7 +214,7 @@ const PlayerMain = styled.section`
       outline: none;
       background: #aaa;
       overflow: hidden;
-      //transition: box-shadow 0.5s ease-in;
+      cursor: pointer;
     }
     .icon {
       cursor: pointer;
@@ -247,6 +251,10 @@ const PlayerMain = styled.section`
   .icon {
     font-size: 1.5625rem;
     color: #ddd;
+    transition: all 0.3s linear;
+    &:hover {
+      color: white;
+    }
   }
   .play {
     display: block;
@@ -273,6 +281,10 @@ const PlayerMain = styled.section`
     color: #ccc;
     font-size: 1.25rem;
     font-weight: 600;
+    transition: all 0.3s linear;
+    &:hover {
+      color: white;
+    }
   }
   .list {
     padding: 10px;

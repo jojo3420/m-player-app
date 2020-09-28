@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ReactAudioPlayer from 'react-audio-player'
 import sampleSong1 from 'resouces/audio/01-sample.mp3'
 // import sampleSong2 from 'resouces/audio/02-sample.mp3'
@@ -11,15 +11,7 @@ function PlayListPage(props) {
   useTitle('PlayList')
   const ref = useRef()
 
-  return (
-    <ReactAudioPlayer
-      src={sampleSong1}
-      ref={ref}
-      autoplay={true}
-      controls={true}
-      controlList={''}
-    />
-  )
+  return <audio src={sampleSong1} controls preload ref={ref} />
 }
 
 export default PlayListPage
