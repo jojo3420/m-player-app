@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import SongList from 'components/player/SongList'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ReactAudioPlayer from 'react-audio-player'
+import palette from 'lib/styles/palette'
 import {
   faForward,
   faPlay,
@@ -10,6 +10,12 @@ import {
   faBackward,
   faAngleUp,
   faAngleDown,
+  faVolumeMute,
+  faVolumeDown,
+  faVolumeUp,
+  // faMusic,
+  // faBell,
+  // faBellSlash,
 } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 
@@ -18,7 +24,13 @@ Player.propTypes = {
   currentIdx: PropTypes.number.isRequired,
   isPlay: PropTypes.bool,
   isListShow: PropTypes.bool,
+  volume: PropTypes.number,
+  muted: PropTypes.bool,
+  volumeVisible: PropTypes.bool,
+  setVolumeVisible: PropTypes.func,
   handlePlaylistVisible: PropTypes.func,
+  handleSongMute: PropTypes.func,
+  handleSongVolume: PropTypes.func,
   onPlaySong: PropTypes.func,
   onStopSong: PropTypes.func,
   onNextPrevSong: PropTypes.func,
@@ -30,34 +42,33 @@ function Player({
   currentIdx,
   isPlay,
   isListVisible,
+  volume,
+  muted,
+  volumeVisible,
+  setVolumeVisible,
   handlePlaylistVisible,
+  handleSongMute,
+  handleSongVolume,
   onPlaySong,
   onStopSong,
   onNextPrevSong,
   onChangePlaySong,
 }) {
-  const ref = useRef()
   const currentSong = songList[currentIdx] || {}
   const { songTitle, artist, thumbnail, audio, format } = currentSong || {}
 
   return (
     <PlayerMain className={`player`}>
       <div className="main">
-        <audio alt="audio player" src={audio} ref={ref} preload={true}>
-          {/*<source src={audio} type={format} />*/}
+        <audio alt="audio player">
           Your browser does not support the <code>audio</code> element.
         </audio>
-        {/*<ReactAudioPlayer*/}
-        {/*  src={audio}*/}
-        {/*  preload={true}*/}
-        {/*  controls={true}*/}
-        {/*  ref={ref}*/}
-        {/*/>*/}
+
         <div className="thumbnail">
-          <img src={thumbnail} height={300} alt="thumbnail" />
+          <img src={thumbnail} height={270} alt="thumbnail" />
         </div>
         <div className="seekbar">
-          <input type="range" value={5} step={1} min={1} max={50} />
+          <input type="range" value={30} step={1} min={0} max={100} />
         </div>
         <div className="details">
           <h2 className="active-song-name">{songTitle}</h2>
@@ -66,7 +77,7 @@ function Player({
         <div className="controls">
           <div className="prev-control">
             <FontAwesomeIcon
-              onClick={onNextPrevSong.bind(null, ref, -1)}
+              onClick={onNextPrevSong.bind(null, -1)}
               className="icon"
               icon={faBackward}
             />
@@ -76,11 +87,11 @@ function Player({
               <FontAwesomeIcon
                 className="icon pause"
                 icon={faPause}
-                onClick={onStopSong.bind(null, ref)}
+                onClick={onStopSong.bind(null)}
               />
             ) : (
               <FontAwesomeIcon
-                onClick={onPlaySong.bind(null, ref)}
+                onClick={onPlaySong.bind(null)}
                 className="icon play"
                 icon={faPlay}
               />
@@ -88,11 +99,35 @@ function Player({
           </div>
           <div className="next-control">
             <FontAwesomeIcon
-              onClick={onNextPrevSong.bind(null, ref, +1)}
+              onClick={onNextPrevSong.bind(null, +1)}
               className="icon"
               icon={faForward}
             />
           </div>
+          <div className="mute-control">
+            <FontAwesomeIcon
+              icon={muted ? faVolumeMute : faVolumeUp}
+              onClick={handleSongMute}
+              className="icon mute"
+            />
+          </div>
+        </div>
+        <div
+          className="volume-slider"
+          onMouseEnter={() => setVolumeVisible(true)}
+          onMouseLeave={() => setVolumeVisible(false)}
+        >
+          {/*<FontAwesomeIcon icon={faVolumeUp} className="icon" />*/}
+          {true && (
+            <input
+              type="range"
+              value={volume}
+              step={0.01}
+              min={0}
+              max={1}
+              onChange={handleSongVolume}
+            />
+          )}
         </div>
       </div>
       <div
@@ -112,11 +147,7 @@ function Player({
             />
           )}
         </div>
-        <SongList
-          list={songList}
-          onChangePlaySong={onChangePlaySong}
-          audioRef={ref}
-        />
+        <SongList list={songList} onChangePlaySong={onChangePlaySong} />
       </div>
     </PlayerMain>
   )
@@ -165,8 +196,33 @@ const PlayerMain = styled.section`
     -webkit-appearance: none;
     width: 0;
     height: 0;
-    box-shadow: -300px 0 0 300px #00acee;
+    //box-shadow: -300px 0 0 300px #00acee;
+    box-shadow: -300px 0 0 300px ${palette.blue[6]};
   }
+  .volume-slider {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    input[type='range'] {
+      -webkit-appearance: none;
+      width: 60%;
+      height: 6px;
+      outline: none;
+      background: #aaa;
+      overflow: hidden;
+      //transition: box-shadow 0.5s ease-in;
+    }
+    .icon {
+      cursor: pointer;
+    }
+  }
+  .volume-slider input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    box-shadow: -300px 0 0 300px ${palette.violet[5]};
+  }
+
   .details {
     text-align: center;
     padding: 15px 0px;
@@ -185,7 +241,7 @@ const PlayerMain = styled.section`
     margin: 8px 0;
   }
   .controls > div {
-    margin: 0px 30px;
+    margin: 0 20px;
     cursor: pointer;
   }
   .icon {
@@ -195,9 +251,6 @@ const PlayerMain = styled.section`
   .play {
     display: block;
   }
-  //.pause {
-  //display: none;
-  //}
   .player-list {
     position: absolute;
     width: 100%;

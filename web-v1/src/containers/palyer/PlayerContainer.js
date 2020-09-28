@@ -14,8 +14,11 @@ import sampleImg5 from 'resouces/img/sample-aobum-5.jpeg'
 // import axios from 'axios'
 
 function PlayerContainer({}) {
+  const [audio, setAudio] = useState(null)
   const [currentIdx, setCurrentIdx] = useState(0)
-
+  const [volume, setVolume] = useState(0.5)
+  const [volumeVisible, setVolumeVisible] = useState(false)
+  const [muted, setMuted] = useState(false)
   const [totalIdx, setTotalIdx] = useState(0)
   const [isPlay, setIsPlay] = useState(false)
   const [isListVisible, setIsListVisible] = useState(false)
@@ -24,65 +27,82 @@ function PlayerContainer({}) {
     const list = sampleList()
     setSongList(list)
     setTotalIdx(list.length || 0)
-    // const fetch = async () => {
-    //   const url = 'http://localhost:4000/web/1.jpeg'
-    //   const response = await axios.get(url)
-    //   console.log({ response })
-    // }
-    // fetch()
+    const audioObj = new Audio()
+    if (Array.isArray(list) && list.length > 0) {
+      audioObj.src = list[0].audio
+      audioObj.preload = true
+    }
+
+    setAudio(audioObj)
   }, [])
 
   const handlePlaylistVisible = useCallback(() => {
     setIsListVisible((visible) => !visible)
   }, [])
 
-  const onPlaySong = useCallback((audioRef) => {
+  const onPlaySong = useCallback(() => {
     setIsPlay((isPlay) => !isPlay)
-    console.log({ audioRef })
-    audioRef.current && audioRef.current.play()
-  }, [])
-  const onStopSong = useCallback((audioRef) => {
+    if (audio && !audio.src) audio.src = songList[currentIdx].audio
+
+    audio && audio.play()
+  }, [audio, songList, currentIdx])
+
+  const onStopSong = useCallback(() => {
     setIsPlay((isPlay) => !isPlay)
-    audioRef && audioRef.current.pause()
-  }, [])
+    audio && audio.pause()
+  }, [audio])
 
   const onNextPrevSong = useCallback(
-    (audioRef, number) => {
+    (number) => {
       setIsPlay((isPlay) => (isPlay ? !isPlay : isPlay))
-      if (audioRef.current) {
-        audioRef.current.pause()
-      }
-      setCurrentIdx(currentIdx < totalIdx ? currentIdx + number : 0)
-
-      if (audioRef.current) {
-        rePlay(audioRef)
+      audio && audio.pause()
+      const index = currentIdx < totalIdx ? currentIdx + number : 0
+      setCurrentIdx(index)
+      if (audio) {
+        audio.src = songList[index].audio
+        audio.play()
         setIsPlay((play) => !play)
       }
     },
-    [currentIdx, totalIdx, songList],
+    [currentIdx, totalIdx, songList, audio],
   )
 
   const onChangePlaySong = useCallback(
-    (song, audioRef) => {
-      console.log({ 'activeSong: ': song })
-      if (audioRef && audioRef.current) {
-        audioRef.current.pause()
-      }
-      setIsPlay((isPlay) => (isPlay ? !isPlay : isPlay))
+    (song) => {
+      // console.log({ 'activeSong: ': song })
+      audio && audio.pause()
 
+      setIsPlay((isPlay) => (isPlay ? !isPlay : isPlay))
       const index = songList.findIndex((item) => item.audio === song.audio)
       if (index > -1) setCurrentIdx(index)
 
-      // 1초후 rePlay!
-      if (audioRef && audioRef.current) {
-        rePlay(audioRef)
+      if (audio) {
+        audio.src = songList[index].audio
+        audio.play()
         setIsPlay((play) => !play)
       }
 
       setIsListVisible((visible) => !visible)
     },
-    [songList],
+    [audio, songList],
   )
+
+  const handleSongVolume = useCallback(
+    (e) => {
+      const { value } = e.target
+      audio.volume = value
+      setVolume(value)
+    },
+    [audio],
+  )
+
+  const handleSongMute = useCallback(() => {
+    if (audio) {
+      let muted = !audio.muted
+      audio.muted = muted
+      setMuted(muted)
+    }
+  }, [audio])
 
   return (
     <>
@@ -90,8 +110,14 @@ function PlayerContainer({}) {
         songList={songList}
         currentIdx={currentIdx}
         isPlay={isPlay}
+        volume={volume}
+        muted={muted}
+        volumeVisible={volumeVisible}
+        setVolumeVisible={setVolumeVisible}
         isListVisible={isListVisible}
         handlePlaylistVisible={handlePlaylistVisible}
+        handleSongMute={handleSongMute}
+        handleSongVolume={handleSongVolume}
         onPlaySong={onPlaySong}
         onStopSong={onStopSong}
         onNextPrevSong={onNextPrevSong}
@@ -101,13 +127,13 @@ function PlayerContainer({}) {
   )
 }
 
-function rePlay(audioRef, second = 700) {
-  if (!audioRef) throw new Error('audioRef is null')
-
-  setTimeout(() => {
-    audioRef.current.play()
-  }, second)
-}
+// function rePlay(audio, second = 0) {
+//   if (!audio) throw new Error('audio intance is null')
+//
+//   setTimeout(() => {
+//     audio.play()
+//   }, second)
+// }
 
 /*
 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio

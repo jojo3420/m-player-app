@@ -13,7 +13,7 @@ import React from 'react'
 // {/*  /!*</div>*!/*/}
 // {/*</div>*/}
 
-function SongList({ list, audioRef, onChangePlaySong }) {
+function SongList({ list, onChangePlaySong }) {
   return (
     <div className="list">
       {Array.isArray(list) &&
@@ -21,7 +21,6 @@ function SongList({ list, audioRef, onChangePlaySong }) {
           <SongItem
             key={item.songTitle + i}
             {...item}
-            audioRef={audioRef}
             onChangePlaySong={onChangePlaySong}
           />
         ))}
@@ -34,21 +33,16 @@ const SongItem = ({
   audio,
   songTitle,
   artist,
-  audioRef,
   onChangePlaySong,
 }) => {
   return (
     <div
       className="item"
-      onClick={onChangePlaySong.bind(
-        this,
-        {
-          audio,
-          songTitle,
-          artist,
-        },
-        audioRef,
-      )}
+      onClick={onChangePlaySong.bind(this, {
+        audio,
+        songTitle,
+        artist,
+      })}
     >
       <div className="thumbnail item_thumbnail">
         <img src={thumbnail} alt="song-thumbnail" />
