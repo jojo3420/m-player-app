@@ -6,13 +6,24 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@loadable/component": "^5.13.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "antd": "^4.6.6",
+    "axios": "^0.20.0",
     "dotenv": "^8.2.0",
+    "immer": "^7.0.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "redux": "^4.0.5",
+    "redux-actions": "^2.6.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-saga": "^1.1.3",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.0"
   },
   "scripts": {
@@ -46,5 +57,6 @@
     "tabWidth": 2,
     "printWidth": 80,
     "useTabs": false
-  }
+  },
+  "proxy": "http://localhost:4000"
 }
