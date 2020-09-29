@@ -1,19 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-// import _useState from 'lib/hooks/_useState'
 import Player from 'components/player/player'
-import sampleSong1 from 'resouces/audio/01-sample.mp3'
-import sampleSong2 from 'resouces/audio/02-sample.mp3'
-import sampleSong3 from 'resouces/audio/03-sample.mp3'
-import sampleSong4 from 'resouces/audio/04-sample.mp3'
-import sampleSong5 from 'resouces/audio/05-sample.mp3'
-import sampleImg1 from 'resouces/img/sample-album.jpg'
-import sampleImg2 from 'resouces/img/sample-aobum-2.jpeg'
-import sampleImg3 from 'resouces/img/sample-aobum-3.jpeg'
-import sampleImg4 from 'resouces/img/sample-aobum-4.jpeg'
-import sampleImg5 from 'resouces/img/sample-aobum-5.jpeg'
 import { calcAudioDuration } from 'lib/util'
 import { chain, add, multiply, round, divide } from 'mathjs'
-
+import { message } from 'antd'
+import { msg } from 'lib/constant'
+/**
+ * 음악 재생 플레이어 컨테이너
+ * @return {*}
+ * @constructor
+ */
 function PlayerContainer({}) {
   const [audio, setAudio] = useState(null)
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -25,6 +20,7 @@ function PlayerContainer({}) {
   const [isPlay, setIsPlay] = useState(false)
   const [isSeek, setIsSeek] = useState(false)
   const [durationSecond, setDurationSecond] = useState(-1)
+  const [humanTime, setHumanTime] = useState('')
   // const [intervalID, setIntervalID] = useState(null)
   const [isListVisible, setIsListVisible] = useState(false)
   const [songList, setSongList] = useState([])
@@ -45,6 +41,8 @@ function PlayerContainer({}) {
     audioObj.addEventListener('loadeddata', () => {
       const duration = audioObj.duration
       const { h, m, s } = calcAudioDuration(duration, null)
+      const humanTime = calcAudioDuration(duration, 'human')
+      setHumanTime(humanTime)
       // console.log({ h, m, s })
 
       const second =
@@ -75,7 +73,12 @@ function PlayerContainer({}) {
     const autoPlay = () => {
       if (isPlay && currentIdx > 0) {
         console.log('autoPlay!')
-        audio.src = songList[currentIdx].audio
+        const source = songList[currentIdx].audio
+        if (!source) {
+          message.warning(msg.noAudio)
+          return
+        }
+        audio.src = source
         audio.play()
         setIsPlay(true)
       }
@@ -109,7 +112,14 @@ function PlayerContainer({}) {
   const onPlaySong = useCallback(() => {
     if (audio) {
       console.log('onPlaySong')
-      if (!audio.src) audio.src = songList[currentIdx].audio
+      if (!audio.src) {
+        const source = songList[currentIdx].audio
+        if (!source) {
+          message.warning(msg.noAudio)
+          return
+        }
+        audio.src = source
+      }
       audio.play()
       setIsPlay(true)
     }
@@ -190,6 +200,7 @@ function PlayerContainer({}) {
         isSeek={isSeek}
         seeking={seeking}
         durationSecond={durationSecond}
+        humanTime={humanTime}
         handleSeek={handleSeek}
         setIsSeek={setIsSeek}
         isListVisible={isListVisible}
@@ -207,7 +218,12 @@ function PlayerContainer({}) {
 // 처음 재생
 function playSong(setSeeking, audio, song, setIsPlay) {
   setSeeking && setSeeking(0)
-  audio.src = song.audio
+  const source = song.audio
+  if (!source) {
+    message.warning(msg.noAudio)
+    return
+  }
+  audio.src = source
   audio.play()
   setIsPlay(true)
 }
@@ -240,36 +256,46 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
 function sampleList() {
   return [
     {
-      thumbnail: sampleImg1,
-      audio: sampleSong1,
+      // thumbnail: sampleImg1,
+      // audio: sampleSong1,
+      thumbnail: '/images/sample-album.jpg',
+      audio: '/audio/01-sample.mp3',
       songTitle: '01 lost stars',
       artist: 'adam levine',
       format: 'audio/mpeg',
     },
     {
-      thumbnail: sampleImg2,
-      audio: sampleSong2,
+      // thumbnail: sampleImg2,
+      // audio: sampleSong2,
+      thumbnail: '/images/sample-aobum-4.jpeg',
+      audio: '/audio/02-sample.mp3',
       songTitle: '02 tell me if you wanna go home',
       artist: 'keira knightley',
       format: 'audio/mpeg',
     },
     {
-      thumbnail: sampleImg3,
-      audio: sampleSong3,
+      // thumbnail: sampleImg3,
+      // audio: sampleSong3,
+      thumbnail: '/images/sample-aobum-3.jpeg',
+      audio: '/audio/03-sample.mp3',
       songTitle: '03 no one else like you',
       artist: 'adam levine',
       format: 'audio/mpeg',
     },
     {
-      thumbnail: sampleImg4,
-      audio: sampleSong4,
+      // thumbnail: sampleImg4,
+      // audio: sampleSong4,
+      thumbnail: '/images/sample-aobum-4.jpeg',
+      audio: '/audio/04-sample.mp3',
       songTitle: '04 green horny',
       artist: 'ceelo',
       format: 'audio/mpeg',
     },
     {
-      thumbnail: sampleImg5,
-      audio: sampleSong5,
+      // thumbnail: sampleImg5,
+      thumbnail: 'images/sample-aobum-5.jpeg',
+      // audio: sampleSong5,
+      audio: '/audio/05-sample.mp3',
       songTitle: '05 lost starts',
       artist: 'keira knightley',
       format: 'audio/mpeg',
@@ -282,7 +308,7 @@ function sampleList() {
       format: 'audio/mpeg',
     },
     {
-      thumbnail: 'Scanline.jpg',
+      thumbnail: '',
       audio: 'Scanline.mp3',
       songTitle: 'Scanline',
       artist: 'Mike Relm',

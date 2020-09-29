@@ -25,6 +25,7 @@ Player.propTypes = {
   muted: PropTypes.bool,
   seeking: PropTypes.number,
   durationSecond: PropTypes.number,
+  humanTime: PropTypes.string,
   handleSeek: PropTypes.func,
   handlePlaylistVisible: PropTypes.func,
   handleSongMute: PropTypes.func,
@@ -44,6 +45,7 @@ function Player({
   muted,
   seeking,
   durationSecond,
+  humanTime,
   handleSeek,
   setIsSeek,
   handlePlaylistVisible,
@@ -65,7 +67,10 @@ function Player({
         </audio>
 
         <div className="thumbnail">
-          <img src={thumbnail} height={270} alt="thumbnail" />
+          <picture>
+            <source srcSet={thumbnail} height={270} alt="thumbnail" />
+            <img src="/images/no-album.gif" height={270} alt="thumbnail" />
+          </picture>
         </div>
         <div className="seekbar">
           <input
@@ -78,6 +83,7 @@ function Player({
             onMouseDown={() => setIsSeek(true)}
             onMouseUp={() => setIsSeek(false)}
           />
+          <span style={{ color: 'white', fontSize: 11 }}>-{humanTime}</span>
         </div>
         <div className="details">
           <h2 className="active-song-name">{songTitle}</h2>
