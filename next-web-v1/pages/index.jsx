@@ -5,6 +5,7 @@ import axios from 'axios'
 
 /**
  * index page
+ * https://medium.com/@pks2974/nextjs-%EB%A1%9C-static-site-%EB%A7%8C%EB%93%A4%EA%B8%B0-f9ab83f29e7
  * @param props
  * @return {*}
  * @constructor
