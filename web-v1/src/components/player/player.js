@@ -188,6 +188,9 @@ const PlayerMain = styled.section`
   }
   .seekbar {
     margin-top: -15px;
+    opacity: 0.7;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
     input[type='range'] {
       -webkit-appearance: none;
       width: 100%;
@@ -195,6 +198,9 @@ const PlayerMain = styled.section`
       outline: none;
       background: #aaa;
       overflow: hidden;
+    }
+    &:hover {
+      opacity: 1;
     }
   }
   .seekbar input[type='range']::-webkit-slider-thumb {
@@ -206,6 +212,9 @@ const PlayerMain = styled.section`
   .volume-slider {
     margin-top: 25px;
     display: flex;
+    opacity: 0.7;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
     justify-content: center;
     input[type='range'] {
       -webkit-appearance: none;
@@ -216,8 +225,14 @@ const PlayerMain = styled.section`
       overflow: hidden;
       cursor: pointer;
     }
+    &:hover {
+      opacity: 1;
+    }
     .icon {
       cursor: pointer;
+      opacity: 0.7;
+      -webkit-transition: 0.2s;
+      transition: opacity 0.2s;
     }
   }
   .volume-slider input[type='range']::-webkit-slider-thumb {
@@ -251,9 +266,12 @@ const PlayerMain = styled.section`
   .icon {
     font-size: 1.5625rem;
     color: #ddd;
-    transition: all 0.3s linear;
+    opacity: 0.9;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
     &:hover {
       color: white;
+      opacity: 1;
     }
   }
   .play {

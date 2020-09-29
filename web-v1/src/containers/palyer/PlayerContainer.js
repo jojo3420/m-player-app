@@ -30,9 +30,10 @@ function PlayerContainer({}) {
   const [songList, setSongList] = useState([])
 
   useEffect(() => {
+    console.log('useEffect!')
     const list = sampleList() || []
     setSongList(list)
-    setTotalIdx(list.length)
+    setTotalIdx(list.length - 1) // index는 0부터 시작 하므로 0 ~ length-1 사이가 재생인덱
     const audioObj = new Audio()
     setAudio(audioObj)
 
@@ -64,7 +65,7 @@ function PlayerContainer({}) {
       audioObj.pause()
       // setIsPlay(false)
       setCurrentIdx((currentIdx) =>
-        currentIdx < list.length ? currentIdx + 1 : 0,
+        currentIdx < list.length - 1 ? currentIdx + 1 : 0,
       )
     })
   }, [])
@@ -73,6 +74,7 @@ function PlayerContainer({}) {
     // 플레이 리스트 index 1부터 끝까지 자동 재생
     const autoPlay = () => {
       if (isPlay && currentIdx > 0) {
+        console.log('autoPlay!')
         audio.src = songList[currentIdx].audio
         audio.play()
         setIsPlay(true)
@@ -82,71 +84,64 @@ function PlayerContainer({}) {
   }, [currentIdx, audio, isPlay, songList])
 
   // 오디오 듀레이션 맞게 seeking 따라가기
-  // useEffect(() => {
-  //   if (isPlay && seeking > 0) {
-  //     // 플레이, 자동재생
-  //     const duration = chain(audio.duration).round(1).multiply(1000).done()
-  //     console.log({ duration }) //  268 second * 1000 => 268000
-  //     const id = setInterval(() => {
-  //       setSeeking((seeking) => {
-  //         console.log({ seeking })
-  //         return seeking + 1
-  //       })
-  //     }, 1000)
-  //   } else {
-  //     // 일시 정지
-  //   }
-  // }, [isPlay, audio, seeking])
+  useEffect(() => {
+    if (isPlay) {
+      // seeking > 0
+      console.log('재생중...' + seeking)
+      const duration = chain(audio.duration).round(1).multiply(1000).done()
+      console.log({ duration }) //  268 second * 1000 => 268000
+      // const id = setInterval(() => {
+      //   setSeeking((seeking) => {
+      //     console.log({ seeking })
+      //     return seeking + 1000
+      //   })
+      // }, 1000)
+    } else {
+      // 일시 정지
+      console.log('일시 정지 상태')
+    }
+  }, [isPlay, audio, seeking])
 
   const handlePlaylistVisible = useCallback(() => {
     setIsListVisible((visible) => !visible)
   }, [])
 
   const onPlaySong = useCallback(() => {
-    setIsPlay((isPlay) => !isPlay)
-    if (audio && !audio.src) audio.src = songList[currentIdx].audio
-
-    audio && audio.play()
+    if (audio) {
+      console.log('onPlaySong')
+      if (!audio.src) audio.src = songList[currentIdx].audio
+      audio.play()
+      setIsPlay(true)
+    }
   }, [audio, songList, currentIdx])
 
   const onStopSong = useCallback(() => {
-    setIsPlay((isPlay) => !isPlay)
-    audio && audio.pause()
+    console.log('onStopSong')
+    stopSong(audio, setIsPlay)
   }, [audio])
 
   const onNextPrevSong = useCallback(
-    (number) => {
-      setIsPlay((isPlay) => (isPlay ? !isPlay : isPlay))
-      audio && audio.pause()
-      const index = currentIdx < totalIdx ? currentIdx + number : 0
-      setCurrentIdx(index)
+    (nextOrPrevNumber) => {
       if (audio) {
-        setSeeking(0)
-        audio.src = songList[index].audio
-        audio.play()
-        setIsPlay((play) => !play)
+        console.log('onNextPrevSong')
+        stopSong(audio, setIsPlay)
+        const index = currentIdx < totalIdx ? currentIdx + nextOrPrevNumber : 0
+        setCurrentIdx(index)
+        playSong(setSeeking, audio, songList[index], setIsPlay)
       }
     },
-    [currentIdx, totalIdx, songList, audio],
+    [audio, currentIdx, totalIdx, songList],
   )
-
   const onChangePlaySong = useCallback(
     (song) => {
-      // console.log({ 'activeSong: ': song })
-      audio && audio.pause()
-
-      setIsPlay((isPlay) => (isPlay ? !isPlay : isPlay))
-      const index = songList.findIndex((item) => item.audio === song.audio)
-      if (index > -1) setCurrentIdx(index)
-
-      if (audio) {
-        audio.src = songList[index].audio
-        audio.play()
-        setIsPlay((play) => !play)
-        setSeeking(0)
+      if (audio && song) {
+        console.log('onChangePlaySong')
+        audio && stopSong(audio, setIsPlay)
+        const index = songList.findIndex((item) => item.audio === song.audio)
+        if (index > -1) setCurrentIdx(index)
+        playSong(setSeeking, audio, songList[index], setIsPlay)
+        setIsListVisible((visible) => !visible)
       }
-
-      setIsListVisible((visible) => !visible)
     },
     [audio, songList],
   )
@@ -209,6 +204,22 @@ function PlayerContainer({}) {
     </>
   )
 }
+// 처음 재생
+function playSong(setSeeking, audio, song, setIsPlay) {
+  setSeeking && setSeeking(0)
+  audio.src = song.audio
+  audio.play()
+  setIsPlay(true)
+}
+// function _playSong() {
+//
+// }
+
+function stopSong(audio, setIsPlay) {
+  audio && audio.pause()
+  setIsPlay(false)
+}
+
 //
 // const playAfter = (second, audio) => {
 //   setTimeout(() => {
