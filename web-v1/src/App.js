@@ -5,13 +5,15 @@ import SignUpPage from 'pages/SignUpPage'
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
 import PlayListPage from 'pages/PlayListPage'
+import AlbumPage from 'pages/AlbumPage'
 
 function App() {
   return (
     <Switch>
       {/*path={['/', '/@:username']},   /posts/:id  */}
+      <Route path="/play" component={PlayerPage} />
       <Route path="/playlist" exact component={PlayListPage} />
-      <Route path="/" component={PlayerPage} />
+      <Route path="/" exact component={AlbumPage} />
       <Route path="/signin" component={LoginPage} />
       <Route path="/signup" component={SignUpPage} />
       <Route component={PageNotFound} />

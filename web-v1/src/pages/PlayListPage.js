@@ -1,17 +1,10 @@
-import React, { useEffect, useRef } from 'react'
-import ReactAudioPlayer from 'react-audio-player'
-import sampleSong1 from 'resouces/audio/01-sample.mp3'
-// import sampleSong2 from 'resouces/audio/02-sample.mp3'
-// import sampleSong3 from 'resouces/audio/03-sample.mp3'
-// import sampleSong4 from 'resouces/audio/04-sample.mp3'
-// import sampleSong5 from 'resouces/audio/05-sample.mp3'
+import React from 'react'
 import useTitle from 'lib/hooks/useTitle'
+import PlayListContainer from 'containers/paly/PlayListContainer'
 
-function PlayListPage(props) {
-  useTitle('PlayList')
-  const ref = useRef()
-
-  return <audio src={sampleSong1} controls preload ref={ref} />
+function PlayListPage() {
+  useTitle('플레이리스트')
+  return <PlayListContainer />
 }
 
 export default PlayListPage

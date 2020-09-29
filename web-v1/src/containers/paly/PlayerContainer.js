@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import Player from 'components/player/player'
+import Player from 'components/play/player'
 import { calcAudioDuration } from 'lib/util'
 import { chain, add, multiply, round, divide } from 'mathjs'
 import { message } from 'antd'

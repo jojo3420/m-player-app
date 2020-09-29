@@ -1,9 +1,9 @@
 import React from 'react'
-import PlayerContainer from 'containers/palyer/PlayerContainer'
+import PlayerContainer from 'containers/paly/PlayerContainer'
 import useTitle from 'lib/hooks/useTitle'
 
 function PlayerPage() {
-  useTitle('Player')
+  useTitle('Play')
   return <PlayerContainer />
 }
 

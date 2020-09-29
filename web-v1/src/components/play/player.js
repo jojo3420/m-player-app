@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import SongList from 'components/player/SongList'
+import SongList from 'components/play/SongList'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import palette from 'lib/styles/palette'
