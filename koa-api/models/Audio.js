@@ -1,18 +1,37 @@
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('audio', {
+  return sequelize.define('media', {
     title: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
+    },
+    artist: {
+      type: DataTypes.STRING(30),
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING(40),
       allowNull: false,
     },
-    data: {
-      type: DataTypes.BLOB,
-      allowNull: true,
-    }
+    filename: {
+      type: DataTypes.STRING(25),
+      allowNull: false,
+    },
+    originalFilename: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    format: {
+      type: DataTypes.STRING(10),
+      allowNull: null,
+    },
+    genre: {
+      type: DataTypes.STRING(10),
+    },
+    avatar: {
+      type: DataTypes.STRING(25)
+    },
+
   }, {
     timestamps: true,
     paranoid: true,
@@ -26,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
 
     // define the table's name
-    tableName: 'audio'
+    tableName: 'media'
   });
 }
 
