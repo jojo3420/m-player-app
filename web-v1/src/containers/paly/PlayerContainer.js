@@ -27,12 +27,11 @@ function PlayerContainer({}) {
   const [humanUsedTime, setHumanUsedTime] = useState('0:00') // 재생 시간
   const [intervalID, setIntervalID] = useState(null) // 인터벌 아이디
   const [isListVisible, setIsListVisible] = useState(false) // 재생목록 show/hide
-  const [isAutoPlayMode, setIsAutoPlayMode] = useState(false) // 자동재생모드
+  const [isAutoPlayMode, setIsAutoPlayMode] = useState(true) // 자동재생모드
   const [songList, setSongList] = useState([]) // 송리스트 배열
 
   useEffect(() => {
-    console.log('useEffect!')
-
+    console.log('first load and server interface')
     const list = sampleList() || []
     setSongList(list)
     setTotalIdx(list.length - 1) // index는 0부터 시작 하므로 0 ~ length-1 사이가 재생인덱
@@ -64,7 +63,6 @@ function PlayerContainer({}) {
     // duration=현재 재생곡으로 듀레이션 유지하거나, 다음 곡 듀레이션으로 변경 (자동재생 모드에따라 결정)
     audioObj.addEventListener('ended', (e) => {
       console.log('current song ended.')
-      stopSong(audioObj, setIsPlay)
       songInit(
         audioObj,
         setDuration,
@@ -74,44 +72,52 @@ function PlayerContainer({}) {
         setUsedSecond,
         setSeeking,
       )
+      stopSong(audioObj, setIsPlay)
 
-      // 다음곡으로 인덱스 이동 하거나 처음으로 리스트 처음으로 이동 ( 자동재생모드 이거나,  아니거나_
-      // if (isAutoPlayMode) {}
-      // setCurrentIdx((currentIdx) =>
-      //   currentIdx < list.length - 1 ? currentIdx + 1 : 0,
-      // )
+      // (자동 재생 모드) - 다음곡으로 인덱스 이동 하거나 처음으로 리스트 처음으로 이동 _
+      if (isAutoPlayMode) {
+        setCurrentIdx((currentIdx) =>
+          currentIdx < list.length - 1 ? currentIdx + 1 : 0,
+        )
+      }
     })
-  }, [])
+  }, [isAutoPlayMode])
 
+  // 자동 재생
   // useEffect(() => {
-  //   // 플레이 리스트 index 1부터 끝까지 자동 재생
   //   const autoPlay = () => {
-  //     if (isPlay && currentIdx > 0) {
-  //       console.log('autoPlay!')
-  //       const source = songList[currentIdx].audio
-  //       if (!source) {
-  //         message.warning(msg.noAudio)
-  //         return
-  //       }
-  //       audio.src = source
-  //       setDuration(Math.floor(audio.duration))
-  //       audio.play()
-  //       setIsPlay(true)
-  //       setHumanUsedTime('0:00')
-  //       setUsedSecond(0)
+  //     if (
+  //       isPlay === false &&
+  //       currentIdx > 0 &&
+  //       isAutoPlayMode &&
+  //       usedSecond === 0 &&
+  //       seeking === 0 &&
+  //       restSecond === Math.ceil(duration)
+  //     ) {
+  //       console.log('autoPlay!' + currentIdx)
+  //       playSong(audio, songList[currentIdx], setIsPlay)
   //     }
   //   }
   //   autoPlay()
-  // }, [currentIdx, audio, isPlay, songList])
+  // }, [
+  //   isPlay,
+  //   currentIdx,
+  //   audio,
+  //   isAutoPlayMode,
+  //   songList,
+  //   usedSecond,
+  //   seeking,
+  //   restSecond,
+  //   duration,
+  // ])
 
   // 오디오 듀레이션 맞게 seeking 따라가기
   useEffect(() => {
-    let id
     if (isPlay) {
       // seeking > 0
-      console.log('재생중...' + seeking)
+      // console.log('재생중...' + seeking)
       // const duration = chain(audio.duration).round(1).multiply(1000).done()
-      id = setInterval(() => {
+      const id = setInterval(() => {
         setRestSecond((second) => second - 1)
         setUsedSecond((second) => second + 1)
         tick(
@@ -124,8 +130,6 @@ function PlayerContainer({}) {
       }, 1000)
       setIntervalID(id)
       return () => window.clearInterval(id)
-    } else {
-      console.log('useEffect - 일시 정지 상태')
     }
   }, [isPlay, seeking, restSecond, usedSecond])
 
@@ -157,7 +161,7 @@ function PlayerContainer({}) {
   const onNextPrevSong = useCallback(
     (nextOrPrevNumber) => {
       if (audio) {
-        console.log('onNextPrevSong')
+        console.log('onNextPrevSong => ' + nextOrPrevNumber)
         stopSong(audio, setIsPlay)
         const index = currentIdx < totalIdx ? currentIdx + nextOrPrevNumber : 0
         setCurrentIdx(index)
@@ -205,7 +209,7 @@ function PlayerContainer({}) {
       if (isSeek) {
         const { value } = e.target
         const seek = parseInt(value, 10)
-        console.log({ seek })
+        // console.log({ seek })
         setSeeking(seek)
         // input.range max 값이 duration * 1000 이므로
         // const toSeeking = divide(seek, 1000)
@@ -245,6 +249,7 @@ function PlayerContainer({}) {
         onStopSong={onStopSong}
         onNextPrevSong={onNextPrevSong}
         onChangePlaySong={onChangePlaySong}
+        setIsAutoPlayMode={setIsAutoPlayMode}
       />
     </>
   )
@@ -329,7 +334,7 @@ function sampleList() {
       audio: '/audio/01-sample.mp3',
       songTitle: '01 lost stars',
       artist: 'adam levine',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       // thumbnail: sampleImg2,
@@ -338,7 +343,7 @@ function sampleList() {
       audio: '/audio/02-sample.mp3',
       songTitle: '02 tell me if you wanna go home',
       artist: 'keira knightley',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       // thumbnail: sampleImg3,
@@ -347,7 +352,7 @@ function sampleList() {
       audio: '/audio/03-sample.mp3',
       songTitle: '03 no one else like you',
       artist: 'adam levine',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       // thumbnail: sampleImg4,
@@ -356,7 +361,7 @@ function sampleList() {
       audio: '/audio/04-sample.mp3',
       songTitle: '04 green horny',
       artist: 'ceelo',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       // thumbnail: sampleImg5,
@@ -365,42 +370,42 @@ function sampleList() {
       audio: '/audio/05-sample.mp3',
       songTitle: '05 lost starts',
       artist: 'keira knightley',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       thumbnail: '',
       audio: '',
       songTitle: "Simon's Song",
       artist: 'Dan Lebowitz',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       thumbnail: '',
       audio: 'Scanline.mp3',
       songTitle: 'Scanline',
       artist: 'Mike Relm',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       thumbnail: 'Flight_To_Tunisia.jpg',
       audio: 'Flight_To_Tunisia.mp3',
       songTitle: 'Flight To Tunisia',
       artist: 'Causmic',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       thumbnail: 'Calimba.jpg',
       audio: 'Calimba.mp3',
       songTitle: 'Calimba',
       artist: "E's Jammy Jams",
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
     {
       thumbnail: 'Everglow.jpg',
       audio: 'Everglow.mp3',
       songTitle: 'Everglow',
       artist: 'Patrick Patrikios',
-      format: 'audio/mpeg',
+      mimeType: 'audio/mpeg',
     },
   ]
 }

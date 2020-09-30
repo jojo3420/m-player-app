@@ -13,6 +13,7 @@ import {
   faVolumeMute,
   faVolumeUp,
   faVolumeDown,
+  faInfinity,
 } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
 
@@ -36,6 +37,7 @@ Player.propTypes = {
   onStopSong: PropTypes.func,
   onNextPrevSong: PropTypes.func,
   onChangePlaySong: PropTypes.func,
+  setIsAutoPlayMode: PropTypes.func,
 }
 
 function Player({
@@ -60,6 +62,7 @@ function Player({
   onStopSong,
   onNextPrevSong,
   onChangePlaySong,
+  setIsAutoPlayMode,
 }) {
   const currentSong = songList[currentIdx] || {}
   const { songTitle, artist, thumbnail } = currentSong || {}
@@ -112,26 +115,33 @@ function Player({
               />
             ) : (
               <FontAwesomeIcon
-                onClick={onPlaySong.bind(null)}
                 className="icon play"
                 icon={faPlay}
+                onClick={onPlaySong.bind(null)}
               />
             )}
           </div>
           <div className="next-control">
             <FontAwesomeIcon
-              onClick={onNextPrevSong.bind(null, +1)}
               className="icon next"
               icon={faForward}
+              onClick={onNextPrevSong.bind(null, +1)}
             />
           </div>
-          <div className="mute-control">
-            <FontAwesomeIcon
-              icon={muted ? faVolumeMute : faVolumeUp}
-              onClick={handleSongMute}
-              className="icon muted"
-            />
-          </div>
+          {/*<div className="mute-control">*/}
+          {/*  <FontAwesomeIcon*/}
+          {/*    className="icon muted"*/}
+          {/*    icon={muted ? faVolumeMute : faVolumeUp}*/}
+          {/*    onClick={handleSongMute}*/}
+          {/*  />*/}
+          {/*</div>*/}
+          {/*<div className="infinity-control">*/}
+          {/*  <FontAwesomeIcon*/}
+          {/*    className="icon"*/}
+          {/*    icon={faInfinity}*/}
+          {/*    onClick={() => setIsAutoPlayMode((autoPlay) => !autoPlay)}*/}
+          {/*  />*/}
+          {/*</div>*/}
         </div>
         <div className="volume-slider">
           {/*<FontAwesomeIcon icon={faVolumeUp} className="icon" />*/}
@@ -270,7 +280,7 @@ const PlayerMain = styled.section`
   .controls {
     display: flex;
     justify-content: center;
-    margin: 8px 0;
+    margin: 8px 0 0 0;
   }
   .controls > div {
     margin: 0 20px;

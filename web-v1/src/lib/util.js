@@ -18,3 +18,9 @@ export function calcAudioDuration(seconds, format) {
 
   return { h, m, s }
 }
+
+// 마임타입으로 재생 가능한 여부인지 확인
+// return:  String => 'probably'
+export function canPlayBy(audio, mimeType) {
+  return audio.canPlayType(mimeType)
+}
