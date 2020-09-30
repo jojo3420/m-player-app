@@ -52,7 +52,7 @@ router.get('/:email/:id', async (req, res, next) => {
       playlist,
     })
   } catch (err) {
-    console.log({ err })
+    next(err, req, res, next)
   }
 })
 

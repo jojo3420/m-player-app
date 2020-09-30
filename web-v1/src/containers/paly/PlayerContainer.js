@@ -4,7 +4,7 @@ import { calcAudioDuration } from 'lib/util'
 import { chain, add, multiply, round, divide } from 'mathjs'
 import { message } from 'antd'
 import { msg } from 'lib/constant'
-import useInterval from 'lib/hooks/useInterval'
+// import useInterval from 'lib/hooks/useInterval'
 
 /**
  * 음악 재생 플레이어 컨테이너
@@ -32,6 +32,7 @@ function PlayerContainer({}) {
 
   useEffect(() => {
     console.log('first load and server interface')
+
     const list = sampleList() || []
     setSongList(list)
     setTotalIdx(list.length - 1) // index는 0부터 시작 하므로 0 ~ length-1 사이가 재생인덱

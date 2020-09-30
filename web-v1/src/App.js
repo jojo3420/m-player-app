@@ -11,7 +11,7 @@ function App() {
   return (
     <Switch>
       {/*path={['/', '/@:username']},   /posts/:id  */}
-      <Route path="/play" component={PlayerPage} />
+      <Route path="/player" component={PlayerPage} />
       <Route path="/playlist" exact component={PlayListPage} />
       <Route path="/" exact component={AlbumPage} />
       <Route path="/signin" component={LoginPage} />
