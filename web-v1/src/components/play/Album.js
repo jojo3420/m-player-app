@@ -2,13 +2,12 @@ import React from 'react'
 
 function Album({
   formField,
-  audios,
   handleField,
   handleAudios,
   onSubmitFileSave,
 }) {
   const { title, artist, genre } = formField
-  console.log({ title, artist, genre })
+  // console.log({ title, artist, genre })
   return (
     <>
       <h2>Album detail</h2>
@@ -27,7 +26,6 @@ function Album({
           오디오 파일:
           <input
             type="file"
-            name="audios"
             multiple={true}
             onChange={handleAudios}
           />
