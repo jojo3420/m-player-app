@@ -6,11 +6,9 @@ const logger = require('morgan')
 const sequelize = require('./models').sequelize
 
 const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
 const playlistRouter = require('./routes/playlist')
 const memberRouter = require('./routes/member')
-
-
+const uploadRouter = require('./routes/upload')
 
 const app = express()
 sequelize.sync()
@@ -28,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // use router middleware
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+app.use('/upload', uploadRouter)
 app.use('/playlist', playlistRouter)
 app.use('/member', memberRouter)
 

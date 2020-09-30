@@ -1,6 +1,8 @@
 const express = require('express')
 const PlayList = require('../../models').PlayList
-const { Sequelize: { Op } } = require('../../models')
+const {
+  Sequelize: { Op },
+} = require('../../models')
 
 // Op 연산자
 // ex1> where: { age: { [Op.gt]: 30 }
@@ -13,21 +15,23 @@ const { Sequelize: { Op } } = require('../../models')
 
 const router = express.Router()
 
-
 router.get('/:email', async (req, res, next) => {
-  const { email } = req.params;
+  const { email } = req.params
   console.log({ email })
   try {
     const playlists = await PlayList.findAll({
       attributes: [
-        'id', 'title', 'email', 'description',
-        'avatar', 'createdAt', 'updatedAt',
+        'id',
+        'title',
+        'email',
+        'description',
+        'avatar',
+        'createdAt',
+        'updatedAt',
       ],
       limit: 20,
       where: { email },
-      order: [
-        ['id', 'DESC'],
-      ],
+      order: [['id', 'DESC']],
     })
 
     res.status = 200
@@ -35,23 +39,21 @@ router.get('/:email', async (req, res, next) => {
   } catch (err) {
     console.log({ err })
   }
-});
-
+})
 
 router.get('/:email/:id', async (req, res, next) => {
   // const id
-  const { id } = req.params;
+  const { id } = req.params
   try {
-    const playlist = await PlayList.findOne({ where: { id } });
+    const playlist = await PlayList.findOne({ where: { id } })
+    // console.log('media: ', playlist.getMedias({}))
     res.json({
       status: 'OK',
-      playlist
+      playlist,
     })
-
   } catch (err) {
     console.log({ err })
   }
+})
 
-});
-
-module.exports = router;
+module.exports = router

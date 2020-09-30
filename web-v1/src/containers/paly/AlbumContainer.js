@@ -18,7 +18,7 @@ export default function AlbumContainer() {
   const handleAudios = useCallback((e) => {
     const { files } = e && e.target
     console.log({ files })
-    const temp = [];
+    const temp = []
     for (let i = 0; i < files.length; i++) {
       temp.push(files[i])
     }
@@ -29,12 +29,12 @@ export default function AlbumContainer() {
     async (e) => {
       e.preventDefault()
       const formData = new FormData()
-      let url = '/upload'
+      let url = '/upload/single'
       if (files && files.length === 1) {
         formData.append('file', files[0])
       } else {
         console.log({ files })
-        url = '/uploads'
+        url = '/upload/array'
         files.forEach((file, i) => {
           formData.append(`files`, file)
         })
@@ -45,9 +45,8 @@ export default function AlbumContainer() {
           url,
           data: formData,
           headers: {
-            "Content-Type": "multipart/form-data"
-
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         })
         console.log({ response })
         message.success(`업로드 성공! ${response.data.cnt}`)
