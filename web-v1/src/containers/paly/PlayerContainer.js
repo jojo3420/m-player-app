@@ -5,6 +5,7 @@ import { chain, add, multiply, round, divide } from 'mathjs'
 import { message } from 'antd'
 import { msg } from 'lib/constant'
 import useInterval from 'lib/hooks/useInterval'
+
 /**
  * 음악 재생 플레이어 컨테이너
  * @return {*}
@@ -44,27 +45,17 @@ function PlayerContainer({}) {
       audioObj.preload = 'auto'
     }
 
-    const songInit = () => {
-      const duration = audioObj.duration
-      setDuration(duration)
-      const { h, m, s } = calcAudioDuration(duration, null)
-      const humanRestTime = calcAudioDuration(duration, 'human')
-      const restSecond =
-        h > 0
-          ? chain(h * 60 + m)
-              .multiply(60)
-              .add(s)
-              .done()
-          : chain(m).multiply(60).add(s).done()
-      setHumanRestTime(humanRestTime)
-      setRestSecond(restSecond)
-      setHumanUsedTime('0:00')
-      setUsedSecond(0)
-    }
-
     audioObj.addEventListener('loadeddata', () => {
       console.log('song loadeddata')
-      songInit()
+      songInit(
+        audioObj,
+        setDuration,
+        setHumanRestTime,
+        setRestSecond,
+        setHumanUsedTime,
+        setUsedSecond,
+        setSeeking,
+      )
     })
 
     // 재생 완료후 오디오 초기화 하기
@@ -74,7 +65,15 @@ function PlayerContainer({}) {
     audioObj.addEventListener('ended', (e) => {
       console.log('current song ended.')
       stopSong(audioObj, setIsPlay)
-      songInit()
+      songInit(
+        audioObj,
+        setDuration,
+        setHumanRestTime,
+        setRestSecond,
+        setHumanUsedTime,
+        setUsedSecond,
+        setSeeking,
+      )
 
       // 다음곡으로 인덱스 이동 하거나 처음으로 리스트 처음으로 이동 ( 자동재생모드 이거나,  아니거나_
       // if (isAutoPlayMode) {}
@@ -124,17 +123,6 @@ function PlayerContainer({}) {
         )
       }, 1000)
       setIntervalID(id)
-
-      // // 멈춤
-      // if (duration * 1000 === seeking) {
-      //   audio.pause()
-      //   setIsPlay(false)
-      //   window.clearInterval(intervalID)
-      // }
-
-      // 자동 재생 모드 이면 다시 재생
-      // if (autoPlayMode)
-
       return () => window.clearInterval(id)
     } else {
       console.log('useEffect - 일시 정지 상태')
@@ -302,6 +290,34 @@ const tick = (
   const humanUsedTime = calcAudioDuration(usedSecond, 'human')
   setHumanRestTime(humanRestTime)
   setHumanUsedTime(humanUsedTime)
+}
+
+const songInit = (
+  audio,
+  setDuration,
+  setHumanRestTime,
+  setRestSecond,
+  setHumanUsedTime,
+  setUsedSecond,
+  setSeeking,
+) => {
+  audio.currentTime = 0
+  const duration = audio.duration
+  setDuration(duration)
+  const { h, m, s } = calcAudioDuration(duration, null)
+  const humanRestTime = calcAudioDuration(duration, 'human')
+  const restSecond =
+    h > 0
+      ? chain(h * 60 + m)
+          .multiply(60)
+          .add(s)
+          .done()
+      : chain(m).multiply(60).add(s).done()
+  setHumanRestTime(humanRestTime)
+  setRestSecond(restSecond)
+  setHumanUsedTime('0:00')
+  setUsedSecond(0)
+  setSeeking(0)
 }
 
 function sampleList() {
