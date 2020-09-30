@@ -20,12 +20,14 @@ Player.propTypes = {
   songList: PropTypes.array.isRequired,
   currentIdx: PropTypes.number.isRequired,
   isPlay: PropTypes.bool,
+  duration: PropTypes.number,
   isListShow: PropTypes.bool,
   volume: PropTypes.number,
   muted: PropTypes.bool,
   seeking: PropTypes.number,
-  durationSecond: PropTypes.number,
-  humanTime: PropTypes.string,
+  restSecond: PropTypes.number,
+  humanRestTime: PropTypes.string,
+  humanUsedTime: PropTypes.string,
   handleSeek: PropTypes.func,
   handlePlaylistVisible: PropTypes.func,
   handleSongMute: PropTypes.func,
@@ -40,12 +42,15 @@ function Player({
   songList,
   currentIdx,
   isPlay,
+  duration,
   isListVisible,
   volume,
   muted,
   seeking,
-  durationSecond,
-  humanTime,
+  restSecond,
+  useSecond,
+  humanRestTime,
+  humanUsedTime,
   handleSeek,
   setIsSeek,
   handlePlaylistVisible,
@@ -78,12 +83,13 @@ function Player({
             value={seeking}
             step={1}
             min={0}
-            max={durationSecond}
+            max={duration}
             onChange={handleSeek}
             onMouseDown={() => setIsSeek(true)}
             onMouseUp={() => setIsSeek(false)}
           />
-          <span style={{ color: 'white', fontSize: 11 }}>-{humanTime}</span>
+          <span style={{ color: 'white', fontSize: 11 }}>{humanUsedTime}</span>
+          <span style={{ color: 'white', fontSize: 11 }}>-{humanRestTime}</span>
         </div>
         <div className="details">
           <h2 className="active-song-name">{songTitle}</h2>
@@ -200,7 +206,8 @@ const PlayerMain = styled.section`
     input[type='range'] {
       -webkit-appearance: none;
       width: 100%;
-      height: 5px;
+      height: 0.625rem; // 10px
+      height: 0.5625rem; // 9px
       outline: none;
       background: #aaa;
       overflow: hidden;
@@ -225,7 +232,7 @@ const PlayerMain = styled.section`
     input[type='range'] {
       -webkit-appearance: none;
       width: 60%;
-      height: 6px;
+      height: 0.5rem; // 16 / 8
       outline: none;
       background: #aaa;
       overflow: hidden;
