@@ -29,12 +29,12 @@ export default function AlbumContainer() {
     async (e) => {
       e.preventDefault()
       const formData = new FormData()
-      let url = '/upload/single'
+      let url = '/file/upload'
       if (files && files.length === 1) {
         formData.append('file', files[0])
       } else {
         console.log({ files })
-        url = '/upload/array'
+        url = '/file/uploads'
         files.forEach((file, i) => {
           formData.append(`files`, file)
         })

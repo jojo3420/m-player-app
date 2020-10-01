@@ -1,34 +1,27 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    'member',
+    'playList',
     {
+      title: {
+        filed: 'title',
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
       email: {
+        filed: 'email',
         type: DataTypes.STRING(40),
         allowNull: false,
-        unique: true,
       },
-      pw: {
-        type: DataTypes.STRING(80),
-        allowNull: false,
-      },
-      username: {
-        field: 'username',
-        type: DataTypes.STRING(20),
+      description: {
+        field: 'description',
+        type: DataTypes.STRING(300),
         allowNull: true,
       },
-      emailPass: {
-        field: 'email_pass',
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: 0,
+      avatar: {
+        filed: 'avatar',
+        type: DataTypes.STRING(25),
+        allowNull: true,
       },
-      mobile: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-      },
-      // smsLogin: {
-      //   type: ''
-      // }
     },
     {
       timestamps: true,
@@ -43,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       freezeTableName: true,
 
       // define the table's name
-      tableName: 'member',
-    },
-  )
-}
+      tableName: 'playlist',
+    }
+  );
+};

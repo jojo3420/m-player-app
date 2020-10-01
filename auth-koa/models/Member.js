@@ -44,6 +44,6 @@ module.exports = (sequelize, DataTypes) => {
 
       // define the table's name
       tableName: 'member',
-    },
-  )
-}
+    }
+  );
+};

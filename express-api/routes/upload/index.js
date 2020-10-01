@@ -4,7 +4,7 @@ const { Media, PlayList } = require('../../models/')
 
 const router = express.Router()
 
-router.post('/single', upload.single('file'), (req, res) => {
+router.post('/upload', upload.single('file'), (req, res) => {
   // FormData의 경우 req로 부터 데이터를 얻을수 없다.
   // upload 핸들러(multer)를 통해서 데이터를 읽을 수 있다
 
@@ -22,7 +22,7 @@ router.post('/single', upload.single('file'), (req, res) => {
   return res.json({ success: 'OK', cnt: 1 })
 })
 
-router.post('/array', upload.array('files', 10), (req, res) => {
+router.post('/uploads', upload.array('files', 10), (req, res) => {
   // FormData의 경우 req로 부터 데이터를 얻을수 없다.
   // upload 핸들러(multer)를 통해서 데이터를 읽을 수 있다
   const { files } = req
