@@ -66,7 +66,6 @@ function Player({
 }) {
   const currentSong = songList[currentIdx] || {}
   const { songTitle, artist, thumbnail } = currentSong || {}
-  throw new Error('f')
 
   return (
     <PlayerMain className="player">

@@ -85,32 +85,15 @@ function PlayerContainer({}) {
   }, [isAutoPlayMode])
 
   // 자동 재생
-  // useEffect(() => {
-  //   const autoPlay = () => {
-  //     if (
-  //       isPlay === false &&
-  //       currentIdx > 0 &&
-  //       isAutoPlayMode &&
-  //       usedSecond === 0 &&
-  //       seeking === 0 &&
-  //       restSecond === Math.ceil(duration)
-  //     ) {
-  //       console.log('autoPlay!' + currentIdx)
-  //       playSong(audio, songList[currentIdx], setIsPlay)
-  //     }
-  //   }
-  //   autoPlay()
-  // }, [
-  //   isPlay,
-  //   currentIdx,
-  //   audio,
-  //   isAutoPlayMode,
-  //   songList,
-  //   usedSecond,
-  //   seeking,
-  //   restSecond,
-  //   duration,
-  // ])
+  useEffect(() => {
+    const autoPlay = () => {
+      if (currentIdx && isAutoPlayMode) {
+        console.log('autoPlay!' + currentIdx)
+        audio && playSong(audio, songList[currentIdx], setIsPlay)
+      }
+    }
+    autoPlay()
+  }, [currentIdx, audio, isAutoPlayMode, songList])
 
   // 오디오 듀레이션 맞게 seeking 따라가기
   useEffect(() => {
