@@ -29,7 +29,6 @@ function PlayerContainer({}) {
   const [isListVisible, setIsListVisible] = useState(false) // 재생목록 show/hide
   const [isAutoPlayMode, setIsAutoPlayMode] = useState(true) // 자동재생모드
   const [songList, setSongList] = useState([]) // 송리스트 배열
-
   useEffect(() => {
     console.log('first load and server interface')
 
@@ -180,7 +179,7 @@ function PlayerContainer({}) {
     [audio],
   )
 
-  const handleSongMute = useCallback(() => {
+  const handleMuteSong = useCallback(() => {
     if (audio) {
       let muted = !audio.muted
       audio.muted = muted
@@ -223,11 +222,11 @@ function PlayerContainer({}) {
         useSecond={usedSecond}
         humanRestTime={humanRestTime}
         humanUsedTime={humanUsedTime}
+        isListVisible={isListVisible}
         handleSeek={handleSeek}
         setIsSeek={setIsSeek}
-        isListVisible={isListVisible}
         handlePlaylistVisible={handlePlaylistVisible}
-        handleSongMute={handleSongMute}
+        handleMuteSong={handleMuteSong}
         handleSongVolume={handleSongVolume}
         onPlaySong={onPlaySong}
         onStopSong={onStopSong}
@@ -261,11 +260,11 @@ function stopSong(audio, setIsPlay) {
 // humanUsedSecond = '0:00' humanRestSecond=?
 // duration=현재 재생곡으로 듀레이션 유지하거나, 다음 곡 듀레이션으로 변경 (자동재생 모드에따라 결정)
 // isPlay=false
-function audioStateInit(setSeeking, setUsedSecond, setDuration) {
-  //
-  // setUsedSecond,
-  // setHumanUsedTime,
-}
+// function audioStateInit(setSeeking, setUsedSecond, setDuration) {
+//   //
+//   // setUsedSecond,
+//   // setHumanUsedTime,
+// }
 
 const tick = (
   restDuration,

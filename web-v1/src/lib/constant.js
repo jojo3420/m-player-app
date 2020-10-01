@@ -3,3 +3,7 @@ export const msg = {
   noThumbnail: '앨범 썸네일을 찾지 못하였습니다.',
   noVideo: '',
 }
+
+export const appInfo = {
+  title: '플레이리스트 M',
+}

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import SongList from 'components/play/SongList'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -16,6 +16,7 @@ import {
   faInfinity,
 } from '@fortawesome/free-solid-svg-icons'
 import PropTypes from 'prop-types'
+import muteIcon from 'resouces/img/mute-slash.png'
 
 Player.propTypes = {
   songList: PropTypes.array.isRequired,
@@ -31,7 +32,7 @@ Player.propTypes = {
   humanUsedTime: PropTypes.string,
   handleSeek: PropTypes.func,
   handlePlaylistVisible: PropTypes.func,
-  handleSongMute: PropTypes.func,
+  handleMuteSong: PropTypes.func,
   handleSongVolume: PropTypes.func,
   onPlaySong: PropTypes.func,
   onStopSong: PropTypes.func,
@@ -45,7 +46,6 @@ function Player({
   currentIdx,
   isPlay,
   duration,
-  isListVisible,
   volume,
   muted,
   seeking,
@@ -53,10 +53,11 @@ function Player({
   useSecond,
   humanRestTime,
   humanUsedTime,
+  isListVisible,
   handleSeek,
   setIsSeek,
   handlePlaylistVisible,
-  handleSongMute,
+  handleMuteSong,
   handleSongVolume,
   onPlaySong,
   onStopSong,
@@ -66,14 +67,50 @@ function Player({
 }) {
   const currentSong = songList[currentIdx] || {}
   const { songTitle, artist, thumbnail } = currentSong || {}
+  // const playPauseRef = useRef()
+  //
+  // const handleKeyPress = (e) => {
+  //   const { key, keyCode } = e
+  //   console.log({ key, keyCode })
+  //   // 27: esc, 13: enter, 32: space
+  //   if ((keyCode === 32 || key === 'Enter') && isPlay) {
+  //     console.log('stopSong')
+  //     onStopSong()
+  //   } else if ((keyCode === 32 || key === 'Enter') && !isPlay) {
+  //     console.log('playSong')
+  //     console.log(onPlaySong)
+  //     onPlaySong()
+  //   } else if (key === 'Escape' && isPlay) {
+  //     onStopSong()
+  //   }
+  // }
+
+  // useEffect(() => {
+  // if (playPauseRef && playPauseRef.current) {
+  //   playPauseRef.current.focus()
+  // }
+
+  // @TODO: background 이미지 설정하기 - 나리에게 적절한 이미지
+  // document.body.style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url("${thumbnail}") center no-repeat`
+  // document.body.style.background = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)) center no-repeat`
+  // document.body.style.background = `linear-gradient(${palette.indigo[2]}, ${palette.indigo[7]}) center no-repeat`
+  // document.body.style.background = `linear-gradient(rgba(145, 167, 255, 0.5), rgba(66, 99, 235, 0.8)) center no-repeat`
+  // document.body.style.backgroundSize = 'cover'
+  // }, [thumbnail])
 
   return (
     <PlayerMain className="player">
       <div className="main">
+        {/*<div className="infinity-control">*/}
+        {/*  <FontAwesomeIcon*/}
+        {/*    className="icon"*/}
+        {/*    icon={faInfinity}*/}
+        {/*    onClick={() => setIsAutoPlayMode((autoPlay) => !autoPlay)}*/}
+        {/*  />*/}
+        {/*</div>*/}
         <audio alt="audio player">
           Your browser does not support the <code>audio</code> element.
         </audio>
-
         <div className="thumbnail">
           <picture>
             <source srcSet={thumbnail} height={270} alt="thumbnail" />
@@ -107,19 +144,11 @@ function Player({
             />
           </div>
           <div className="play-pause-control">
-            {isPlay ? (
-              <FontAwesomeIcon
-                className="icon pause"
-                icon={faPause}
-                onClick={onStopSong.bind(null)}
-              />
-            ) : (
-              <FontAwesomeIcon
-                className="icon play"
-                icon={faPlay}
-                onClick={onPlaySong.bind(null)}
-              />
-            )}
+            <FontAwesomeIcon
+              className={`icon ${isPlay ? 'pause' : 'play'}`}
+              icon={isPlay ? faPause : faPlay}
+              onClick={isPlay ? onStopSong.bind(null) : onPlaySong.bind(null)}
+            />
           </div>
           <div className="next-control">
             <FontAwesomeIcon
@@ -128,23 +157,16 @@ function Player({
               onClick={onNextPrevSong.bind(null, +1)}
             />
           </div>
-          {/*<div className="mute-control">*/}
-          {/*  <FontAwesomeIcon*/}
-          {/*    className="icon muted"*/}
-          {/*    icon={muted ? faVolumeMute : faVolumeUp}*/}
-          {/*    onClick={handleSongMute}*/}
-          {/*  />*/}
-          {/*</div>*/}
-          {/*<div className="infinity-control">*/}
-          {/*  <FontAwesomeIcon*/}
-          {/*    className="icon"*/}
-          {/*    icon={faInfinity}*/}
-          {/*    onClick={() => setIsAutoPlayMode((autoPlay) => !autoPlay)}*/}
-          {/*  />*/}
-          {/*</div>*/}
+          {/* 뮤트, 자동플레이모드 아이콘 */}
+          <div className="mute-control">
+            <FontAwesomeIcon
+              className="icon muted"
+              icon={muted ? faVolumeMute : faVolumeUp}
+              onClick={handleMuteSong}
+            />
+          </div>
         </div>
         <div className="volume-slider">
-          {/*<FontAwesomeIcon icon={faVolumeUp} className="icon" />*/}
           {true && (
             <input
               type="range"

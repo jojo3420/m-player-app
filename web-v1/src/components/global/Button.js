@@ -1,9 +1,23 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
-import palette from 'lib/styles/palette';
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { Link } from 'react-router-dom'
+import palette from 'lib/styles/palette'
 
-const buttonStyle = css`
+/**
+ * 공통 버튼
+ * @param props
+ *   fullWidth : boolean
+ * @return {*}
+ * @constructor
+ */
+function Button(props) {
+  const { children, fullWidth } = props
+  if (fullWidth) return <StyledButton {...props}>{children}</StyledButton>
+
+  return <StyledLink>{children}</StyledLink>
+}
+
+const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -17,7 +31,7 @@ const buttonStyle = css`
     background: ${palette.gray[6]};
   }
   ${(props) =>
-    props.fullWidth &&
+    props['fullWidth'] &&
     css`
       padding-top: 0.75rem;
       padding-bottom: 0.75rem;
@@ -25,29 +39,17 @@ const buttonStyle = css`
       font-size: 1.125rem;
     `}
   ${(props) =>
-    props.cyan &&
+    props.type === 'submit' &&
     css`
       background: ${palette.cyan[5]};
       &:hover {
         background: ${palette.cyan[4]};
       }
     `}
-`;
-
-const StyledButton = styled.button`
-  ${buttonStyle}
-`;
+`
 
 const StyledLink = styled(Link)`
-  ${buttonStyle}
-`;
+  //color: green;
+`
 
-const Button = (props) => {
-  return props.to ? (
-    <StyledLink {...props} cyan={props.cyan ? 1 : 0} />
-  ) : (
-    <StyledButton {...props} />
-  );
-};
-
-export default Button;
+export default Button

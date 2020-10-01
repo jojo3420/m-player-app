@@ -1,117 +1,92 @@
-import React from 'react';
-import { Form, Input, Button, Typography, Space, Row, Col } from 'antd';
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import palette from 'lib/styles/palette'
+import Button from 'components/global/Button'
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
+/**
+ * 회원가입 또는 로그인 폼을 보여 줍니다.
+ */
 
-const { Title } = Typography;
+const AuthFormBlock = styled.div``
+const StyledInput = styled.input``
+const Footer = styled.footer``
 
-function AuthForm({ type, title, buttonLabel, initialValues, onSubmit }) {
-  const [form] = Form.useForm();
-
-  const onFinish = (values) => {
-    // console.log('Success:', values);
-    onSubmit(values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    // console.log('Failed:', errorInfo);
-  };
-  const onReset = () => {
-    form.resetFields();
-  };
-  // const onFill = () => {
-  //   form.setFieldsValue({
-  //     username: 'test',
-  //     password: '1234'
-  //   })
-  // };
-
+const AuthForm = ({
+  type,
+  email,
+  username,
+  pw1,
+  pw2,
+  mobile,
+  smsNo,
+  onChangeEmail,
+  onSubmit,
+  onSendSMS,
+}) => {
+  const title = type === 'signIn' ? '로그인' : '회원가입'
   return (
-    <Row justify="start" align="middle">
-      <Col span={16}>
-        <Title>{title}</Title>
-        <Form
-          form={form}
-          initialValues={initialValues}
-          {...layout}
-          name="basic"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your username!',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+    <AuthFormBlock>
+      <h3>{title}</h3>
+      <form onSubmit={onSubmit}>
+        <StyledInput
+          type="email"
+          autoComplete="email"
+          name="email"
+          placeholder="email 입력"
+          value={email}
+          onChange={onChangeEmail}
+        />
+        <StyledInput
+          type="password"
+          value={pw1}
+          name="pw1"
+          placeholder="password 입력"
+        />
+        {title === '회원가입' && (
+          <>
+            <StyledInput
+              type="password"
+              value={pw2}
+              name="pw2"
+              placeholder="password 재입력"
+              onChange={() => {}}
+            />
+            <StyledInput
+              value={username}
+              name="username"
+              placeholder="username"
+              onChange={() => {}}
+            />
+            <StyledInput
+              type="tel"
+              value={mobile}
+              name="mobile"
+              placeholder="모바일 번호 입력"
+              onChange={() => {}}
+            />
+            <Button onClick={onSendSMS}>인증번호 전송</Button>
+            <StyledInput
+              type="number"
+              value={smsNo}
+              name="smsNo"
+              placeholder="모바일 인증번호 입력"
+              onChange={() => {}}
+            />
+          </>
+        )}
+        <Button type="submit" fullWidth>
+          {title}
+        </Button>
+      </form>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your password!',
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-
-          {type === 'signUp' && (
-            <Form.Item
-              label="ConfirmPassword"
-              name="confirmPassword"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your ConfirmPassword!',
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-          )}
-
-          {/*<Form.Item {...tailLayout} name="remember" valuePropName="checked">*/}
-          {/*  <Checkbox>Remember me</Checkbox>*/}
-          {/*</Form.Item>*/}
-
-          <Form.Item {...tailLayout}>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                {buttonLabel || 'Submit '}
-              </Button>
-              <Button htmlType="button" onClick={onReset}>
-                지우기
-              </Button>
-              {/*<Button htmlType="button" onClick={onFill}>*/}
-              {/*  fill*/}
-              {/*</Button>*/}
-            </Space>
-          </Form.Item>
-        </Form>
-      </Col>
-    </Row>
-  );
+      <Footer>
+        <Link to={type === 'signIn' ? '/signup' : '/signin'}>
+          {type === 'signIn' ? '회원가입 이동' : '로그인 이동'}
+        </Link>
+      </Footer>
+    </AuthFormBlock>
+  )
 }
 
-export default AuthForm;
+export default AuthForm
