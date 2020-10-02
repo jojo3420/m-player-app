@@ -1,8 +1,9 @@
 const express = require('express')
 const Joi = require('joi')
 const validator = require('express-joi-validation').createValidator({})
-const { Member } = require('../../models')
 const ctrl = require('./auth-control')
+// const { Member } = require('../../models')
+const hasTokenMiddleware = require('../../lib/hasTokenMiddleware')
 
 const router = express.Router()
 
@@ -48,14 +49,18 @@ const { signUp, signIn, logout, check } = ctrl
 const signUpSchema = Joi.object({
   email: Joi.string().required(),
   pw: Joi.string().required(),
-  mobile: Joi.string().required(),
   username: Joi.string().required(),
+  mobile: Joi.string().required(),
 })
 
-// validator.query(signUpSchema)
-router.post('/signup', signUp)
-router.post('/signin', signIn)
-router.post('/logout', logout)
-router.get('/check', check)
+const signInSchema = Joi.object({
+  email: Joi.string().required(),
+  pw: Joi.string().required(),
+})
+
+router.post('/signup', validator.body(signUpSchema), signUp)
+router.post('/signin', validator.body(signInSchema), signIn)
+router.post('/logout', hasTokenMiddleware, logout)
+router.get('/check', hasTokenMiddleware, check)
 
 module.exports = router

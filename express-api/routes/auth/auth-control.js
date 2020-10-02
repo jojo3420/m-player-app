@@ -57,7 +57,6 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
   const { email, pw } = req.body
-
   try {
     const member = await Member.findOne({
       where: { email },
@@ -95,8 +94,9 @@ exports.signIn = async (req, res, next) => {
 
 exports.logout = async (req, res, next) => {
   try {
-    res.cookies('access_token', '')
+    res.cookie('access_token', '')
     res.status = 204
+    res.end()
   } catch (e) {
     next(e)
   }
@@ -105,7 +105,10 @@ exports.logout = async (req, res, next) => {
 exports.check = async (req, res, next) => {
   console.log({ state: req.body })
   try {
-    const { member } = req.body
+    // @TODO
+    let member = {}
+    // const { member } = req.locals
+    // console.log({ member })
     if (!member) {
       res.status = 400
       res.json({

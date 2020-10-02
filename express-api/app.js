@@ -28,9 +28,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // use router middleware
 app.use('/', indexRouter)
-app.use('/file', uploadRouter)
+app.use('/file', uploadRouter) // hasTokenMiddleware
 app.use('/playlist', playlistRouter)
-app.use('/auth', hasTokenMiddleware, authRouter)
+app.use('/auth', authRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

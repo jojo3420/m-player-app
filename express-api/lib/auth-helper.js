@@ -32,7 +32,6 @@ function generateToken(email) {
       expiresIn: '7d', // 7days
     },
   )
-  // console.log({ token })
   return token
 }
 

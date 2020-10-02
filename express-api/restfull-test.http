@@ -1,0 +1,54 @@
+
+###  1.회원 가입하기
+POST http://localhost:4000/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test8@test.com",
+  "pw": "test1234",
+  "username": "test8",
+  "mobile": "01012341234"
+}
+
+### 2. 로그인
+POST http://localhost:4000/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test3@test.com",
+  "pw": "test1234"
+}
+
+### 3.  로그아웃
+#  headers access_token 으로 토큰 전달해야함
+POST http://localhost:4000/auth/logout
+Content-Type: application/json
+
+{}
+
+###
+
+### 4. 로그인 체크
+#  headers access_token 으로 토큰 전달해야함
+GET http://localhost:4000/auth/check
+Accept: application/json
+
+{}
+###
+
+
+
+###
+
+###  audio, video file read by stream
+# url: public/audio/vKLJDRv8EEWNP1ib.mp3
+# url: /Users/jhnoru/yarn.lock
+#
+POST http://localhost:4000/file/read/media
+Content-Type: application/json
+
+{
+"path": "public/audio/vKLJDRv8EEWNP1ib.mp3"
+}
+
+###

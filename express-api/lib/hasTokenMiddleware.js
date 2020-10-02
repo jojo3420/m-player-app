@@ -4,13 +4,17 @@ const hasTokenMiddleware = async (req, res, next) => {
   const token = req.cookies['access_token']
   // console.log({ token })
   if (!token) {
-    return next()
+    return next({
+      message: 'noPermissions',
+      status: 401,
+    })
   }
   try {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY)
-    console.log({ decoded })
+    // console.log({ decoded })
     if (decoded) {
-      req.body.member = decoded
+      // @TODO
+      // req.locals.member = decoded
       return next()
     }
   } catch (e) {
