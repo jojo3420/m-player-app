@@ -25,7 +25,6 @@ exports.signUp = async (req, res, next) => {
       message: 'email 이 중복 입니다.',
       email,
     })
-    return
   }
 
   try {
@@ -103,13 +102,10 @@ exports.logout = async (req, res, next) => {
 }
 
 exports.check = async (req, res, next) => {
-  console.log({ state: req.body })
   try {
-    // @TODO
-    let member = {}
-    // const { member } = req.locals
-    // console.log({ member })
-    if (!member) {
+    const { auth } = res.locals
+    // console.log({ auth })
+    if (!auth) {
       res.status = 400
       res.json({
         message: '로그인 상태가 아닙니다.',
@@ -117,7 +113,7 @@ exports.check = async (req, res, next) => {
       return
     }
     res.status = 200
-    res.json(member)
+    res.json(auth)
   } catch (e) {
     next(e)
   }

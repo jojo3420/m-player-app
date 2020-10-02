@@ -13,8 +13,7 @@ const hasTokenMiddleware = async (req, res, next) => {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY)
     // console.log({ decoded })
     if (decoded) {
-      // @TODO
-      // req.locals.member = decoded
+      res.locals.auth = decoded
       return next()
     }
   } catch (e) {
