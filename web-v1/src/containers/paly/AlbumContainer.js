@@ -2,8 +2,15 @@ import React, { useEffect, useState, useCallback } from 'react'
 import Album from 'components/play/Album'
 import axios from 'axios'
 import { message } from 'antd'
+import { useParams, useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import LoginGuard from 'containers/auth/LoginGuard'
 
-export default function AlbumContainer() {
+function AlbumContainer({}) {
+  const params = useParams()
+  const { id } = params
+  console.log({ id })
   const [formField, setField] = useState({
     title: '',
     artist: '',
@@ -59,11 +66,22 @@ export default function AlbumContainer() {
   )
 
   return (
-    <Album
-      formField={formField}
-      handleField={handleField}
-      handleAudios={handleAudios}
-      onSubmitFileSave={onSubmitFileSave}
-    />
+    <>
+      <LoginGuard />
+      <Album
+        formField={formField}
+        handleField={handleField}
+        handleAudios={handleAudios}
+        onSubmitFileSave={onSubmitFileSave}
+      />
+    </>
   )
 }
+export default connect(
+  ({ auth }) => {
+    return {
+      auth: auth.auth,
+    }
+  },
+  (dispatch) => bindActionCreators({}, dispatch),
+)(AlbumContainer)
