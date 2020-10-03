@@ -74,7 +74,7 @@ exports.signUp = async (ctx) => {
   if (alreadyMember) {
     ctx.status = 402;
     ctx.body = {
-      message: 'email 이 중복 입니다.',
+      message: '이미 등록된 email 주소 입니다',
       email,
     };
     return;

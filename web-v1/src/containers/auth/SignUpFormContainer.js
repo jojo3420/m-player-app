@@ -1,70 +1,158 @@
-import React, { useCallback, useEffect } from 'react'
-import SignUpForm from 'components/auth/SignUpForm'
-import { withRouter } from 'react-router-dom'
-import { onSignUp, onCheckLogin } from 'modules/auth'
-import useActions from 'lib/hooks/useActions'
-import { useSelector } from 'react-redux'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { onIsAvailable, onSignUp, onCheckLogin, sendSMS } from 'modules/auth'
 import { message } from 'antd'
-import AuthTemplate from 'components/auth/AuthTemplat'
-import AuthForm from 'components/auth/AuthForm'
+import AuthTemplate from 'components/auth/AuthTemplate'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import useTextInput from 'lib/hooks/useTextInput'
+import SignUpForm from 'components/auth/SignUpForm'
+import bcrypt from 'bcryptjs'
 
-function SignUpFormContainer({ history }) {
-  const { signUp, user, check } = useSelector(({ loading, auth }) => {
-    return {
-      signUp: auth.signUp,
-      user: auth.user,
-      check: auth.check,
-      loading: loading['auth/SIGN_UP'],
-    }
-  })
+function SignUpFormContainer({
+  auth,
+  // signUp,
+  // available,
+  serverNo,
+  check,
+  onIsAvailable,
+  onSignUp,
+  onCheckLogin,
+  sendSMS,
+}) {
+  const history = useHistory()
+  const [email, onChangeEmail] = useTextInput('kkk@kkk.com')
+  const [username, onChangeUsername] = useTextInput('sser')
+  const [pw1, onChangePw1] = useTextInput('test1234')
+  const [pw2, onChangePw2] = useTextInput('test1234')
+  const [mobile, onChangeMobile] = useTextInput('01012341234')
+  // const [serverNo, setServerNo] = useState('')
+  const [certificationNo, setCertificationNo] = useState('')
+  const [step, setStep] = useState(0)
+  const [isSend, setIsSend] = useState(false)
 
-  const [handleSignUp, handleCheckLogin] = useActions(
-    [onSignUp, onCheckLogin],
-    [],
-  )
-
-  const onSignUpSubmit = useCallback(
-    async (user) => {
-      console.log({ user })
-      const { username, password, confirmPassword } = user
-      if (password !== confirmPassword) {
-        return message.error('패스워드가 불일치 합니다.')
+  const onAvailableSubmit = useCallback(
+    async (e) => {
+      e.preventDefault()
+      if (pw1 !== pw2) return message.error('패스워드가 불일치 합니다.')
+      try {
+        await onIsAvailable({ email, pw: pw1 })
+        setStep(1)
+        setIsSend(false)
+      } catch (error) {
+        // console.log({ error })
+        message.warn(
+          (error && error.response.data.msg) || '회원 가입이 실패했습니다.',
+        )
       }
-      await handleSignUp({ username, password })
-      await handleCheckLogin()
-      message.success('회원가입 성공!')
     },
-    [handleSignUp, handleCheckLogin, history],
+    [email, pw1, pw2],
   )
-  useEffect(() => {
-    if (signUp && signUp.status >= 400) {
-      message.error(signUp.responseMessage || '회원 가입이 실패했습니다.')
-    }
-  }, [signUp])
+  const onSendSMS = useCallback(
+    async (e) => {
+      e.preventDefault()
+      // @TODO - SMS SEND
+      try {
+        await sendSMS({ to: mobile, type: 'auth' })
+        setIsSend(true)
+      } catch (err) {
+        console.log({ err })
+        message.warning((err && err.response.data.msg) || '인증번호 전송 실패')
+      }
+    },
+    [mobile],
+  )
+
+  const onCompleteCertificationNo = useCallback((values) => {
+    // console.log({ values })
+    setCertificationNo(values)
+  }, [])
+
+  const onSignUpFinishSubmit = useCallback(
+    async (e) => {
+      e.preventDefault()
+      // email, pw1,, username, mobile, certificationNo
+      console.log({ serverNo, certificationNo })
+      if (bcrypt.compare(certificationNo, serverNo)) {
+        await onSignUp({ email, pw: pw1, username, mobile })
+        await onCheckLogin()
+        message.success('회원가입 성공!')
+      } else {
+        message.warning('인증번호가 일치하지 않습니다.')
+      }
+    },
+    [email, pw1, username, mobile, serverNo, certificationNo, onSignUp],
+  )
+
+  // useEffect(() => {
+  // if (signUp && signUp.status >= 400) {
+  //   message.error(signUp.msg || '회원 가입이 실패했습니다.')
+  // } else if (available && available.status === 403) {
+  //   message.warning(available.msg || '이미 사용중인 회원 정보 입니다.')
+  // }
+  // return () => null
+  // }, [signUp, available])
 
   // login check ok
   useEffect(() => {
     if (check.logged) {
       console.log('login check ok.')
     }
+    return () => null
   }, [check])
 
   useEffect(() => {
-    if (user) {
-      history.push(`/@${user.username}`)
+    if (auth) {
       try {
-        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('auth', JSON.stringify(auth))
       } catch (e) {
         console.log('회원 가입 로컬 스토리지 저장 실패.' + e)
       }
+      history.push('/')
     }
-  }, [user])
+  }, [auth])
 
   return (
     <AuthTemplate>
-      <AuthForm type="signUp" onSubmit={onSignUpSubmit} />
+      <SignUpForm
+        step={step}
+        isSend={isSend}
+        member={{ email, username, pw1, pw2, mobile, certificationNo }}
+        onChange={{
+          onChangeEmail,
+          onChangeUsername,
+          onChangePw1,
+          onChangePw2,
+          onChangeMobile,
+          onCompleteCertificationNo,
+        }}
+        onAvailableSubmit={onAvailableSubmit}
+        onSignUpFinishSubmit={onSignUpFinishSubmit}
+        onSendSMS={onSendSMS}
+      />
     </AuthTemplate>
   )
 }
 
-export default withRouter(SignUpFormContainer)
+export default connect(
+  ({ auth }) => {
+    return {
+      auth: auth.auth,
+      signUp: auth.signUp,
+      check: auth.check,
+      available: auth.available,
+      serverNo: auth.sms.server,
+    }
+  },
+  (dispatch) => {
+    return bindActionCreators(
+      {
+        onIsAvailable,
+        onSignUp,
+        onCheckLogin,
+        sendSMS,
+      },
+      dispatch,
+    )
+  },
+)(SignUpFormContainer)

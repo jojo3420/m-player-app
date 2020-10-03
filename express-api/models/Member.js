@@ -16,19 +16,23 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(20),
         allowNull: true,
       },
+      mobile: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: true,
+      },
       emailPass: {
         field: 'email_pass',
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: 0,
       },
-      mobile: {
-        type: DataTypes.STRING(20),
+      smsPass: {
+        field: 'sms_pass',
+        type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: 0,
       },
-      // smsLogin: {
-      //   type: ''
-      // }
     },
     {
       timestamps: true,

@@ -44,7 +44,7 @@ const debugging = async (req, res, next) => {
   await next()
 }
 
-const { signUp, signIn, logout, check } = ctrl
+const { isAvailableEmail, signUp, signIn, logout, check } = ctrl
 
 const signUpSchema = Joi.object({
   email: Joi.string().required(),
@@ -59,6 +59,7 @@ const signInSchema = Joi.object({
 })
 
 router.post('/signup', validator.body(signUpSchema), signUp)
+router.post('/available', validator.body(signInSchema), isAvailableEmail)
 router.post('/signin', validator.body(signInSchema), signIn)
 router.post('/logout', hasTokenMiddleware, logout)
 router.get('/check', hasTokenMiddleware, check)

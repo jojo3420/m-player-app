@@ -14,7 +14,7 @@ function Button(props) {
   const { children, fullWidth } = props
   if (fullWidth) return <StyledButton {...props}>{children}</StyledButton>
 
-  return <StyledLink>{children}</StyledLink>
+  return <StyledLink {...props}>{children}</StyledLink>
 }
 
 const StyledButton = styled.button`
@@ -41,15 +41,24 @@ const StyledButton = styled.button`
   ${(props) =>
     props.type === 'submit' &&
     css`
-      background: ${palette.cyan[5]};
+      background: ${props.color ? palette[props.color][5] : palette.gray[5]};
       &:hover {
-        background: ${palette.cyan[4]};
+        background: ${props.color ? palette[props.color][4] : palette.gray[4]};
       }
     `}
 `
 
 const StyledLink = styled(Link)`
-  //color: green;
+  width: 200px;
+  //color: red;
+  color: ${palette.gray[8]};
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  color: ${(props) => (props.color ? props.color[5] : palette.gray[5])};
+  &:hover {
+    background: ${(props) =>
+      props.color ? palette[props.color][4] : palette.gray[4]};
+  }
 `
 
 export default Button

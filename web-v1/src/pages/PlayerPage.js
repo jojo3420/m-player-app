@@ -1,7 +1,7 @@
 import React from 'react'
 import PlayerContainer from 'containers/paly/PlayerContainer'
 import useTitle from 'lib/hooks/useTitle'
-import ErrorBoundary from 'components/global/ErrorBoundary'
+import MyLayout from 'components/layout/MyLayout'
 import styled from 'styled-components'
 
 function PlayerPage() {
@@ -12,9 +12,9 @@ function PlayerPage() {
   document.body.style.backgroundSize = 'cover'
 
   return (
-    <ErrorBoundary>
+    <MyLayout>
       <PlayerContainer />
-    </ErrorBoundary>
+    </MyLayout>
   )
 }
 

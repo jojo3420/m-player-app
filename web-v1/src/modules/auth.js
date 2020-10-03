@@ -1,43 +1,67 @@
-import { createAction, handleActions } from 'redux-actions';
-import makeActionTypes from 'lib/makeActionTypes';
-import createRequestThunk from 'lib/createRequestThunk';
-import * as authApi from 'lib/api/auth';
-import produce from 'immer';
+import { createAction, handleActions } from 'redux-actions'
+import makeActionTypes from 'lib/makeActionTypes'
+import createRequestThunk from 'lib/createRequestThunk'
+import createRequestSaga from 'lib/createRequestSaga'
+import * as api from 'lib/api/auth'
+import produce from 'immer'
+import { clearToken } from 'lib/localStorage'
+import { takeLatest, throttle } from 'redux-saga/effects'
 
 // Action
-const PREFIX = 'auth';
-const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = makeActionTypes(
-  `${PREFIX}/LOGIN`,
-);
+const PREFIX = 'auth'
+const [SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE] = makeActionTypes(
+  `${PREFIX}/SIGN_IN`,
+)
 const [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE] = makeActionTypes(
   `${PREFIX}/LOGOUT`,
-);
+)
 const [SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILURE] = makeActionTypes(
   `${PREFIX}/SIGN_UP`,
-);
-
+)
 const [CHECK_LOGIN, CHECK_LOGIN_SUCCESS, CHECK_LOGIN_FAILURE] = makeActionTypes(
   `${PREFIX}/CHECK_LOGIN`,
-);
-const [TEMP_SET_USER, ,] = makeActionTypes(`${PREFIX}/TEMP_SET_USER`);
+)
+const [IS_AVAILABLE_MEMBER, , IS_AVAILABLE_MEMBER_FAILURE] = makeActionTypes(
+  `${PREFIX}/IS_AVAILABLE_MEMBER`,
+)
+const [SEND_SMS, SEND_SMS_SUCCESS, SEND_SMS_FAILURE] = makeActionTypes(
+  `${PREFIX}/SEND_SMS`,
+)
 
 // Action Creator
-export const onLogin = createRequestThunk(LOGIN, authApi.login);
-export const onLogout = createRequestThunk(LOGOUT, authApi.logout);
-export const onSignUp = createRequestThunk(SIGN_UP, authApi.signUp);
-export const onCheckLogin = createRequestThunk(CHECK_LOGIN, authApi.checkLogin);
-export const tempSetUser = createAction(TEMP_SET_USER, (user) => user);
+export const onIsAvailable = createRequestThunk(
+  IS_AVAILABLE_MEMBER,
+  api.isAvailable,
+)
+export const onSignIn = createRequestThunk(SIGN_IN, api.signIn)
+export const onLogout = createRequestThunk(LOGOUT, api.logout)
+export const onSignUp = createRequestThunk(SIGN_UP, api.signUp)
+export const onCheckLogin = createRequestThunk(CHECK_LOGIN, api.checkLogin)
+export const sendSMS = createRequestThunk(SEND_SMS, api.sendSMS)
+
+// Saga Action Creator
+// export const onSignUp = createAction(SIGN_UP, (member) => member)
+
+// const signUpSaga = createRequestSaga(SIGN_UP, api.signUp)
+
+export function* authSaga() {
+  // yield throttle(3000, SIGN_UP, signUpSaga)
+}
 
 // State
 const initialState = {
-  user: null,
-  login: {
-    responseMessage: '',
+  auth: null,
+  signIn: {
+    msg: '',
     status: null,
     e: null,
   },
+  available: {
+    msg: '',
+    status: '',
+  },
   signUp: {
-    responseMessage: '',
+    msg: '',
     status: null,
     e: null,
   },
@@ -48,70 +72,86 @@ const initialState = {
   logout: {
     e: null,
   },
-};
-
-function removeUserByLocalStorage() {
-  try {
-    localStorage.removeItem('user');
-  } catch (e) {
-    console.log('removeUserByLocalStorage() - user is not removed..' + e);
-  }
+  sms: {
+    send: false,
+    server: '',
+  },
 }
 
 // Reducer
 const auth = handleActions(
   {
-    [SIGN_UP_SUCCESS]: (state, { payload: user }) =>
+    // [IS_AVAILABLE_MEMBER_SUCCESS]: (state, action) => {},
+    [IS_AVAILABLE_MEMBER_FAILURE]: (state, action) =>
       produce(state, (draft) => {
-        draft.user = user;
-        draft.signUp = initialState.signUp;
+        const { error, response } = action
+        // console.log({ e, error, response })
+        draft.available.error = error
+        draft.available.msg = response.data.msg
+        draft.available.status = response.status
       }),
-    [SIGN_UP_FAILURE]: (state, { e }) =>
+    [SIGN_UP_SUCCESS]: (state, { payload: auth }) =>
       produce(state, (draft) => {
-        draft.user = null;
-        draft.signUp.responseMessage = e.response.data.message;
-        draft.signUp.status = e.response.status;
-        draft.signUp.e = e;
+        draft.auth = auth
+        // draft.signUp = initialState.signUp
       }),
-    [LOGIN_SUCCESS]: (state, { payload: user }) =>
+    [SIGN_UP_FAILURE]: (state, { e, error, response }) =>
       produce(state, (draft) => {
-        draft.user = user;
-        draft.login = initialState.login;
+        draft.auth = null
+        draft.signUp.msg = response.data.msg
+        draft.signUp.status = response.status
+        draft.signUp.e = e
+        draft.signUp.error = error
       }),
-    [LOGIN_FAILURE]: (state, { e }) =>
+    [SIGN_IN_SUCCESS]: (state, { payload: auth }) =>
       produce(state, (draft) => {
-        draft.user = null;
-        draft.login.responseMessage = e.response.data.message;
-        draft.login.status = e.response.status;
-        draft.login.e = e;
+        draft.auth = auth
+        draft.signIn = initialState.signIn
+      }),
+    [SIGN_IN_FAILURE]: (state, { e, error, response }) =>
+      produce(state, (draft) => {
+        draft.auth = null
+        draft.signIn.msg = response.data.msg
+        draft.signIn.status = response.status
+        draft.signIn.e = e
+        draft.signIn.error = error
       }),
     [LOGOUT_SUCCESS]: () => {
-      removeUserByLocalStorage();
-      return initialState;
+      clearToken()
+      return initialState
     },
     [LOGOUT_FAILURE]: (state, { e }) =>
       produce(state, (draft) => {
-        draft.logout.e = e;
+        draft.logout.e = e
       }),
-    [CHECK_LOGIN_SUCCESS]: (state, { payload: user }) =>
+    [CHECK_LOGIN_SUCCESS]: (state, { payload: auth }) =>
       produce(state, (draft) => {
-        draft.check.logged = true;
-        draft.check.e = null;
-        draft.user = user;
+        draft.check.logged = true
+        draft.check.e = null
+        draft.auth = auth
       }),
     [CHECK_LOGIN_FAILURE]: (state, { e }) =>
       produce(state, (draft) => {
-        draft.check.logged = false;
-        draft.check.e = e;
-        draft.user = null;
-        removeUserByLocalStorage();
+        draft.check.logged = false
+        draft.check.e = e
+        draft.auth = null
+        clearToken()
       }),
-    [TEMP_SET_USER]: (state, { payload: user }) =>
-      produce(state, (draft) => {
-        draft.user = user;
-      }),
+    [SEND_SMS_SUCCESS]: (state, { payload }) => {
+      return produce(state, (draft) => {
+        draft.sms.send = true
+        draft.sms.msg = payload.msg
+        draft.sms.server = payload.server
+      })
+    },
+    [SEND_SMS_FAILURE]: (state, { error, response }) => {
+      return produce(state, (draft) => {
+        draft.sms.error = error
+        draft.sms.msg = response.msg
+      })
+    },
   },
   initialState,
-);
+)
 
-export default auth;
+export default auth

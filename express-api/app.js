@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index')
 const playlistRouter = require('./routes/playlist')
 const authRouter = require('./routes/auth')
 const uploadRouter = require('./routes/upload')
+const smsRouter = require('./routes/sms')
 
 const app = express()
 sequelize.sync()
@@ -31,6 +32,7 @@ app.use('/', indexRouter)
 app.use('/file', uploadRouter) // hasTokenMiddleware
 app.use('/playlist', playlistRouter)
 app.use('/auth', authRouter)
+app.use('/sms', smsRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

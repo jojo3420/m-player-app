@@ -1,13 +1,14 @@
 import React from 'react'
 import SignInFormContainer from 'containers/auth/SignInFormContainer'
 import useTitle from 'lib/hooks/useTitle'
+import ErrorBoundary from 'components/global/ErrorBoundary'
 
 function SignInPage({}) {
   useTitle('Login')
   return (
-    <div>
+    <ErrorBoundary>
       <SignInFormContainer />
-    </div>
+    </ErrorBoundary>
   )
 }
 

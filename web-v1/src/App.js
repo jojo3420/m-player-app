@@ -6,6 +6,7 @@ import SignInPage from 'pages/SignInPage'
 import PageNotFound from 'pages/PageNotFound'
 import PlayListPage from 'pages/PlayListPage'
 import AlbumPage from 'pages/AlbumPage'
+import 'antd/dist/antd.css'
 
 function App() {
   return (
