@@ -1,79 +1,10 @@
 import React, { Component } from 'react'
-import ReactCodeInput from 'react-verification-code-input'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import palette from 'lib/styles/palette'
 import Button from 'components/global/Button'
+import CertificationInput from 'components/global/CertificationInput'
 
-const AuthFormBlock = styled.div`
-  h3 {
-    color: ${palette.gray[8]};
-    margin: 0 0 1.2rem;
-    font-size: 1.3rem;
-  }
-`
-
-const StyledInput = styled.input`
-  font-size: 1rem;
-  border: none;
-  border-bottom: 1px solid ${palette.gray[5]};
-  padding-bottom: 0.5rem;
-  outline: none;
-  width: 100%;
-  &:focus {
-    color: ${palette.gray[8]};
-    border-bottom: 1px solid ${palette.gray[7]};
-  }
-  & + & {
-    margin-top: 1rem;
-  }
-  &::placeholder {
-    // color: ${palette.red[6]};
-  }
-`
-const ButtonWithMarginTop = styled(Button)`
-  margin-top: 1.5rem;
-`
-
-const StyledLink = styled.div`
-  margin-top: 2rem;
-  text-align: right;
-  a {
-    color: ${palette.gray[6]};
-    text-decoration: underline;
-  }
-  &:hover {
-    color: ${palette.gray[9]};
-  }
-`
-
-const StyledCheckboxBlock = styled.div`
-  label {
-    display: inline-block;
-    font-size: 1rem;
-    margin: 0.5rem 0.3rem 0 0;
-    text-align: left;
-    cursor: pointer;
-  }
-  input:hover {
-    cursor: pointer;
-  }
-`
-
-const ErrorMsg = styled.p`
-  color: ${palette.red[6]};
-`
-
-const StyledFindBlock = styled.div`
-  text-align: right;
-  a {
-    color: ${palette.gray[8]};
-    text-decoration: none;
-  }
-  a:hover {
-    color: ${palette.gray[6]};
-  }
-`
 /**
  * 회원 가입 및 로그인 폼
  * @param props
@@ -112,7 +43,7 @@ export default function SignUpForm({
       {step > 0 ? (
         <form onSubmit={isSend ? onSignUpFinishSubmit : onSendSMS}>
           {isSend ? (
-            <ReactCodeInputExample
+            <CertificationInput
               placeholder={''}
               onComplete={onCompleteCertificationNo}
             />
@@ -192,18 +123,45 @@ export default function SignUpForm({
     </AuthFormBlock>
   )
 }
-class ReactCodeInputExample extends Component {
-  render() {
-    const { placeholder, onComplete } = this.props
 
-    return (
-      <ReactCodeInput
-        fieldWidth={53}
-        fieldHeight={53}
-        autoFocus={true}
-        placeholder={placeholder}
-        onComplete={onComplete}
-      />
-    )
+const AuthFormBlock = styled.div`
+  h3 {
+    color: ${palette.gray[8]};
+    margin: 0 0 1.2rem;
+    font-size: 1.3rem;
   }
-}
+`
+
+const StyledInput = styled.input`
+  font-size: 1rem;
+  border: none;
+  border-bottom: 1px solid ${palette.gray[5]};
+  padding-bottom: 0.5rem;
+  outline: none;
+  width: 100%;
+  &:focus {
+    color: ${palette.gray[8]};
+    border-bottom: 1px solid ${palette.gray[7]};
+  }
+  & + & {
+    margin-top: 1rem;
+  }
+  &::placeholder {
+    // color: ${palette.red[6]};
+  }
+`
+const ButtonWithMarginTop = styled(Button)`
+  margin-top: 1.5rem;
+`
+
+const StyledLink = styled.div`
+  margin-top: 2rem;
+  text-align: right;
+  a {
+    color: ${palette.gray[6]};
+    text-decoration: underline;
+  }
+  &:hover {
+    color: ${palette.gray[9]};
+  }
+`

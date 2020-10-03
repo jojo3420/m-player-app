@@ -6,6 +6,19 @@ import { appInfo } from 'lib/constant'
 
 /**
  */
+const AuthTemplate = ({ children }) => {
+  return (
+    <AuthTemplateBlock>
+      <WhiteBox>
+        <div className="sub-title">
+          <Link to="/about">{appInfo.title}</Link>
+        </div>
+        {children}
+      </WhiteBox>
+    </AuthTemplateBlock>
+  )
+}
+
 const AuthTemplateBlock = styled.div`
   //margin-top: 40px;
   //margin-bottom: 40px;
@@ -35,19 +48,14 @@ const WhiteBox = styled.div`
   width: 380px;
   background: white;
   border-radius: 2px;
-`
+  a {
+    color: ${palette.indigo[5]};
+    //transition: color 0.3s linear;
 
-const AuthTemplate = ({ children }) => {
-  return (
-    <AuthTemplateBlock>
-      <WhiteBox>
-        <div className="sub-title">
-          <Link to="/">{appInfo.title}</Link>
-        </div>
-        {children}
-      </WhiteBox>
-    </AuthTemplateBlock>
-  )
-}
+    &:hover {
+      color: ${palette.indigo[4]};
+    }
+  }
+`
 
 export default AuthTemplate

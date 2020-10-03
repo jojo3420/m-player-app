@@ -30,10 +30,10 @@ function LoginForm({ register, errors, handleSubmit, onSubmit }) {
           placeholder={errors.pw1 ? '암호 필수 입력' : '암호 입력'}
           ref={register({ required: true })}
         />
-        <StyledCheckboxBlock>
-          <label htmlFor="saveCheckbox">아이디 저장</label>
-          <input type="checkbox" name="saveCheckbox" id="saveCheckbox" />
-        </StyledCheckboxBlock>
+        {/*<StyledCheckboxBlock>*/}
+        {/*<label htmlFor="saveCheckbox">아이디 저장</label>*/}
+        {/*<input type="checkbox" name="saveCheckbox" id="saveCheckbox" />*/}
+        {/*</StyledCheckboxBlock>*/}
         <StyledFindBlock>
           <Link to="/find/id">아이디 찾기 </Link>
           <span> | </span>
@@ -105,6 +105,7 @@ const StyledCheckboxBlock = styled.div`
 
 const StyledFindBlock = styled.div`
   text-align: right;
+  margin-top: 10px;
   a {
     color: ${palette.gray[8]};
     text-decoration: none;
