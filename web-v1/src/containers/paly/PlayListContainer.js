@@ -10,7 +10,7 @@ function PlayListContainer({}) {
   return (
     <>
       <LoginGuard />
-      <PlayList />
+      <PlayList list={[]} />
     </>
   )
 }

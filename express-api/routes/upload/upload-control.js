@@ -17,7 +17,7 @@ const singleUpload = (req, res) => {
     mimetype,
     size,
   })
-  res.json({ success: 'OK', cnt: 1 })
+  res.json({ msg: 'OK', cnt: 1 })
 }
 
 const multiUpload = (req, res) => {
@@ -39,9 +39,9 @@ const multiUpload = (req, res) => {
         size,
       })
     })
-    return res.json({ status: 'OK', cnt: req.files.length })
+    return res.json({ msg: 'OK', cnt: req.files.length })
   } else {
-    return res.json({ status: 'NONE', cnt: req.files.length })
+    return res.json({ msg: 'NONE', cnt: req.files.length })
   }
 }
 
@@ -64,20 +64,25 @@ const readMedia = async (req, res, next) => {
   const mimeType = mime.getType(path)
   console.log({ mimeType: mimeType })
 
+  // const data = []
   const stream = fs.createReadStream(path)
   let count = 0
 
-  stream.on('data', (data) => {
+  stream.on('data', (chunk) => {
     count += 1
     // console.log({ count })
-    res.write(data)
+    res.write(chunk)
+    // res.push(chunk)
   })
 
   stream.on('end', () => {
     console.log('end streaming')
-
     // 4.1. 클라이언트에 전송완료를 알림
     res.end()
+  })
+  stream.on('error', (err) => {
+    console.error('stream error: ', err)
+    res.status(500).json({ msg: 'read stream error' })
   })
 }
 

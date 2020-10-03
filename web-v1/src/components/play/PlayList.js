@@ -1,7 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-function PlayList() {
-  return <div>list</div>
+PlayList.propTypes = {
+  list: PropTypes.array.isRequired,
+}
+
+function PlayList({ list }) {
+  return <div>playlist</div>
 }
 
 export default PlayList
