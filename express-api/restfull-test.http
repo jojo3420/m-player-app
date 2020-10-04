@@ -52,3 +52,45 @@ Content-Type: application/json
 }
 
 ###
+
+
+### Get Playlist
+GET http://localhost:4000/playlist/kkk@kkk.com
+Accept: application/json
+
+###
+
+
+### Create Playlist by id
+POST http://localhost:4000/playlist
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "test #1",
+  "email": "kkk@kkk.com",
+  "description": "test-playlist #1",
+  "avatar": "test-avatar.jpg"
+}
+
+###
+
+
+### Modify Playlist
+PATCH http://localhost:4000/playlist
+Content-Type: application/json
+
+{
+  "id": 3,
+  "avatar": "good.png"
+}
+
+
+###
+### DELETE Playlist
+DELETE http://localhost:4000/playlist/2
+Content-Type: application/json
+
+{}
+
+###

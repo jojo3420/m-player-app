@@ -18,8 +18,7 @@ exports.isAvailableEmail = async (req, res, next) => {
     attributes: ['email', 'pw', 'smsPass'],
     where: { email },
   })
-  console.log({ member })
-
+  // console.log({ member })
   if (!member) {
     res.status(200).json({
       msg: 'PASS',
@@ -57,7 +56,7 @@ exports.signUp = async (req, res, next) => {
   const alreadyMember = await Member.findOne({
     where: { email, mobile },
   })
-  console.log({ alreadyMember })
+  // console.log({ alreadyMember })
   if (alreadyMember) {
     res.status(402).json({
       msg: '이메일 또는 휴대폰 번호가 중복 입니다.',
@@ -75,7 +74,7 @@ exports.signUp = async (req, res, next) => {
       username,
       smsPass: true,
     })
-    const token = generateToken(email)
+    const token = generateToken(member)
     res.cookie('access_token', token, {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
@@ -113,7 +112,7 @@ exports.signIn = async (req, res, next) => {
       return
     }
 
-    const token = generateToken(email)
+    const token = generateToken(member)
     res.cookie('access_token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,

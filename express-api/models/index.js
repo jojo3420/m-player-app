@@ -20,8 +20,8 @@ db.Media = require('./Media')(sequelize, Sequelize)
 db.PlayList = require('./PlayList')(sequelize, Sequelize)
 
 // 멤버와 플레이리스트 1:N 관계
-db.Member.hasMany(db.PlayList)
-db.PlayList.belongsTo(db.Member)
+db.Member.hasMany(db.PlayList, { foreignKey: 'member_id', sourceKey: 'id' })
+db.PlayList.belongsTo(db.Member, { foreignKey: 'member_id', targetKey: 'id' })
 
 // 플레이리스트 & 미디어파일 관게 => N: M 관계
 db.PlayList.belongsToMany(db.Media, { through: 'playlist_media' })

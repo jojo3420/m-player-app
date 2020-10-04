@@ -18,14 +18,16 @@ function serialize(member) {
   return memberJSON
 }
 
-function generateToken(email) {
+function generateToken(member) {
   // 1.토큰을 만드는 데 넣고 싶은 데이터 ,
   // 2. sign secret key
   // 3. options(토큰 유효일)
   // console.log({ key: process.env.JWT_SECRET_KEY })
+  const { email, id } = member
   const token = jwt.sign(
     {
       email,
+      id,
     },
     process.env.JWT_SECRET_KEY,
     {

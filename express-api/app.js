@@ -6,12 +6,13 @@ const logger = require('morgan')
 const sequelize = require('./models').sequelize
 require('dotenv').config()
 
-const hasTokenMiddleware = require('./lib/hasTokenMiddleware')
+// const hasTokenMiddleware = require('./lib/hasTokenMiddleware')
 const indexRouter = require('./routes/index')
 const playlistRouter = require('./routes/playlist')
 const authRouter = require('./routes/auth')
 const uploadRouter = require('./routes/upload')
 const smsRouter = require('./routes/sms')
+const ytDownloadRouter = require('./routes/youtube-download')
 
 const app = express()
 sequelize.sync()
@@ -33,6 +34,7 @@ app.use('/file', uploadRouter) // hasTokenMiddleware
 app.use('/playlist', playlistRouter)
 app.use('/auth', authRouter)
 app.use('/sms', smsRouter)
+app.use('/yt', ytDownloadRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
