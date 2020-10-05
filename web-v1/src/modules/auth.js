@@ -1,11 +1,11 @@
 import { createAction, handleActions } from 'redux-actions'
 import makeActionTypes from 'lib/makeActionTypes'
 import createRequestThunk from 'lib/createRequestThunk'
-import createRequestSaga from 'lib/createRequestSaga'
 import * as api from 'lib/api/auth'
 import produce from 'immer'
-import { clearToken } from 'lib/localStorage'
-import { takeLatest, throttle } from 'redux-saga/effects'
+// import { clearToken } from 'lib/localStorage'
+// import { takeLatest, throttle } from 'redux-saga/effects'
+// import createRequestSaga from 'lib/createRequestSaga'
 
 // Action
 const PREFIX = 'auth'
@@ -117,7 +117,7 @@ const auth = handleActions(
         draft.signIn.error = error
       }),
     [LOGOUT_SUCCESS]: () => {
-      clearToken()
+      // clearToken()
       return initialState
     },
     [LOGOUT_FAILURE]: (state, { e }) =>
@@ -135,7 +135,7 @@ const auth = handleActions(
         draft.check.logged = false
         draft.check.e = e
         draft.auth = null
-        clearToken()
+        // clearToken()
       }),
     [SEND_SMS_SUCCESS]: (state, { payload }) => {
       return produce(state, (draft) => {

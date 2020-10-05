@@ -8,11 +8,12 @@ import { bindActionCreators } from 'redux'
 import useTextInput from 'lib/hooks/useTextInput'
 import SignUpForm from 'components/auth/SignUpForm'
 import bcrypt from 'bcryptjs'
+import { validationMobile } from 'lib/validator'
+
+
 
 function SignUpFormContainer({
   auth,
-  // signUp,
-  // available,
   serverNo,
   check,
   onIsAvailable,
@@ -25,8 +26,8 @@ function SignUpFormContainer({
   const [username, onChangeUsername] = useTextInput('sser')
   const [pw1, onChangePw1] = useTextInput('test1234')
   const [pw2, onChangePw2] = useTextInput('test1234')
-  const [mobile, onChangeMobile] = useTextInput('01012341234')
-  // const [serverNo, setServerNo] = useState('')
+  const [mobile, onChangeMobile] = useTextInput('')
+  const [isMobileValid, setIsMobileValid] = useState(false)
   const [certificationNo, setCertificationNo] = useState('')
   const [step, setStep] = useState(0)
   const [isSend, setIsSend] = useState(false)
@@ -51,18 +52,25 @@ function SignUpFormContainer({
   const onSendSMS = useCallback(
     async (e) => {
       e.preventDefault()
-      // @TODO - SMS SEND
-      try {
-        await sendSMS({ to: mobile, type: 'auth' })
-        setIsSend(true)
-      } catch (err) {
-        console.log({ err })
-        message.warning((err && err.response.data.msg) || '인증번호 전송 실패')
+      if (isMobileValid) {
+        try {
+          // @TODO - SMS SEND
+          await sendSMS({ to: mobile.replace(/-/g, ''), type: 'auth' })
+          setIsSend(true)
+        } catch (err) {
+          console.log({ err })
+          message.warning((err && err.response.data.msg) || '인증번호 전송 실패')
+        }
+      } else {
+        message.warn('휴대폰 형식을 확인해주세요.')
       }
+
+
     },
-    [mobile],
+    [mobile, isMobileValid],
   )
 
+  // 사용자 인증번호 입력 완료시 핸들러
   const onCompleteCertificationNo = useCallback((values) => {
     // console.log({ values })
     setCertificationNo(values)
@@ -93,6 +101,13 @@ function SignUpFormContainer({
   // return () => null
   // }, [signUp, available])
 
+
+  const onBlurMobile = useCallback(() => {
+    const bool = validationMobile(mobile)
+    setIsMobileValid(bool)
+  }, [mobile])
+
+
   // login check ok
   useEffect(() => {
     if (check.logged) {
@@ -100,6 +115,8 @@ function SignUpFormContainer({
     }
     return () => null
   }, [check])
+
+
 
   useEffect(() => {
     if (auth) {
@@ -129,6 +146,7 @@ function SignUpFormContainer({
         onAvailableSubmit={onAvailableSubmit}
         onSignUpFinishSubmit={onSignUpFinishSubmit}
         onSendSMS={onSendSMS}
+        onBlurMobile={onBlurMobile}
       />
     </AuthTemplate>
   )

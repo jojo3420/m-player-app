@@ -20,6 +20,7 @@ export default function SignUpForm({
   onAvailableSubmit,
   onSignUpFinishSubmit,
   onSendSMS,
+                                     onBlurMobile,
 }) {
   const { email, username, pw1, pw2, mobile } = member
   const {
@@ -54,9 +55,10 @@ export default function SignUpForm({
               value={mobile}
               autoComplete="on"
               onChange={onChangeMobile}
-              placeholder={'휴대폰 번호 입력'}
+              placeholder={'ex) 010-1234-5678'}
               maxLength={13}
               required={true}
+              onBlur={onBlurMobile}
             />
           )}
           <ButtonWithMarginTop

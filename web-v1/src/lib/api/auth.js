@@ -1,13 +1,9 @@
 import getInstance from 'lib/api/instance'
-import { readToken } from 'lib/localStorage'
+// import { readToken } from 'lib/localStorage'
 
-const token = readToken()
+// const token = readToken()
 
-const instance = getInstance({
-  headers: {
-    access_token: token,
-  },
-})
+const instance = getInstance()
 // const URL = ''
 
 export const isAvailable = async (member) => {
