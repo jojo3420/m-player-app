@@ -25,6 +25,7 @@ router.post('/send', async function (req, res, next) {
     })
   } else {
     const random = generatorRandom(6)
+
     try {
       // await requestSMS(to, random)
 
@@ -39,38 +40,5 @@ router.post('/send', async function (req, res, next) {
     }
   }
 })
-
-const requestSMS = async (to, random) => {
-  const options = {
-    method: 'POST',
-    hostname: 'sms.gabia.com',
-    path: '/api/send/sms',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: '',
-    },
-  }
-  const postData = qs.stringify({
-    phone: to,
-    callback: '15444370',
-    message: 'SMS TEST MESSAGE => ' + random,
-    refkey: 'RESTAPITEST1547771538',
-  })
-
-  const req = await https.request(options, (res) => {
-    const chunks = []
-
-    res.on('data', (chunk) => {
-      chunks.push(chunk)
-    })
-    res.on('end', (err) => {
-      if (err) console.log({ err })
-      console.log('send end...')
-    })
-  })
-
-  req.write(postData)
-  req.end()
-}
 
 module.exports = router
