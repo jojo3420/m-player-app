@@ -13,6 +13,9 @@ const authRouter = require('./routes/auth')
 const uploadRouter = require('./routes/upload')
 const smsRouter = require('./routes/sms')
 const ytDownloadRouter = require('./routes/youtube-download')
+// const { initDB } = require('./lib/util')
+
+// initDB(300)
 
 const app = express()
 sequelize.sync()

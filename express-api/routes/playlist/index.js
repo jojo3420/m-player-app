@@ -1,5 +1,6 @@
 const express = require('express')
 const { PlayList, Member } = require('../../models')
+const { transformToInnerList } = require('../../lib/util')
 const {
   Sequelize: { Op },
 } = require('../../models')
@@ -18,7 +19,7 @@ const router = express.Router()
 // 플레이리스트 조회
 router.get('/:email', async (req, res, next) => {
   const { email } = req.params
-  console.log({ email })
+  // console.log({ email })
   try {
     const member = await Member.findOne({
       attributes: ['id', 'email'],
@@ -33,10 +34,12 @@ router.get('/:email', async (req, res, next) => {
     }
     const playlist = await member.getPlayLists({
       attributes: ['id', 'title', 'email', 'description', 'avatar'],
-      limit: 20,
+      limit: 28,
       order: [['id', 'DESC']],
     })
-    res.status(200).json({ status: 'OK', playlist })
+    res
+      .status(200)
+      .json({ status: 'OK', playlist: transformToInnerList(playlist, 4) })
   } catch (err) {
     console.log({ err })
     next(err)

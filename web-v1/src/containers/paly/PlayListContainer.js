@@ -6,7 +6,7 @@ import { message } from 'antd'
 import LoginGuard from 'containers/auth/LoginGuard'
 import { getPlayListBy } from 'modules/playlist'
 
-function PlayListContainer({ auth, playList, getPlayListBy }) {
+function PlayListContainer({ auth, playList, loadingPlayList, getPlayListBy }) {
   useEffect(() => {
     const fetch = async (email) => {
       await getPlayListBy(email)
@@ -16,16 +16,17 @@ function PlayListContainer({ auth, playList, getPlayListBy }) {
   return (
     <>
       <LoginGuard />
-      <PlayList playList={playList} />
+      <PlayList playList={playList} loading={loadingPlayList} />
     </>
   )
 }
 
 export default connect(
-  ({ auth, playList }) => {
+  ({ auth, playList, loading }) => {
     return {
       auth: auth.auth,
       playList: playList.list,
+      loadingPlayList: loading['playlist/GET_PLAY_LIST_BY'],
     }
   },
   (dispatch) =>

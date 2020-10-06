@@ -1,0 +1,12 @@
+###  audio, video file read by stream
+# url: public/audio/vKLJDRv8EEWNP1ib.mp3
+# url: /Users/jhnoru/yarn.lock
+#
+POST http://localhost:4000/file/read/media
+Content-Type: application/json
+
+{
+  "path": "public/audio/vKLJDRv8EEWNP1ib.mp3"
+}
+
+###

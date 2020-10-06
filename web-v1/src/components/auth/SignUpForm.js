@@ -20,7 +20,7 @@ export default function SignUpForm({
   onAvailableSubmit,
   onSignUpFinishSubmit,
   onSendSMS,
-                                     onBlurMobile,
+  onBlurMobile,
 }) {
   const { email, username, pw1, pw2, mobile } = member
   const {

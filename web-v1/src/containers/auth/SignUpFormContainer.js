@@ -10,8 +10,6 @@ import SignUpForm from 'components/auth/SignUpForm'
 import bcrypt from 'bcryptjs'
 import { validationMobile } from 'lib/validator'
 
-
-
 function SignUpFormContainer({
   auth,
   serverNo,
@@ -59,13 +57,13 @@ function SignUpFormContainer({
           setIsSend(true)
         } catch (err) {
           console.log({ err })
-          message.warning((err && err.response.data.msg) || '인증번호 전송 실패')
+          message.warning(
+            (err && err.response.data.msg) || '인증번호 전송 실패',
+          )
         }
       } else {
         message.warn('휴대폰 형식을 확인해주세요.')
       }
-
-
     },
     [mobile, isMobileValid],
   )
@@ -101,12 +99,10 @@ function SignUpFormContainer({
   // return () => null
   // }, [signUp, available])
 
-
   const onBlurMobile = useCallback(() => {
     const bool = validationMobile(mobile)
     setIsMobileValid(bool)
   }, [mobile])
-
 
   // login check ok
   useEffect(() => {
@@ -115,8 +111,6 @@ function SignUpFormContainer({
     }
     return () => null
   }, [check])
-
-
 
   useEffect(() => {
     if (auth) {

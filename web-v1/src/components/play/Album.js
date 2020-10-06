@@ -1,11 +1,6 @@
 import React from 'react'
 
-function Album({
-  formField,
-  handleField,
-  handleAudios,
-  onSubmitFileSave,
-}) {
+function Album({ formField, handleField, handleAudios, onSubmitFileSave }) {
   const { title, artist, genre } = formField
   // console.log({ title, artist, genre })
   return (
@@ -24,11 +19,7 @@ function Album({
         {/*</label>*/}
         <label>
           오디오 파일:
-          <input
-            type="file"
-            multiple={true}
-            onChange={handleAudios}
-          />
+          <input type="file" multiple={true} onChange={handleAudios} />
         </label>
         <button type={'submit'}>오디오 저장</button>
       </form>
