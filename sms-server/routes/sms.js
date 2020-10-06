@@ -14,21 +14,30 @@ router.get("/", (req, res, next) => {
 /* GET home page. */
 router.post("/send", async function (req, res, next) {
   const { to } = req.body;
-  console.log({ to, apiKey: process.env.SMS_API_KEY });
+  // console.log({ to, apiKey: process.env.SMS_API_KEY });
   const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
-  console.log({ authorization });
+  // console.log({ authorization });
   const random = generatorRandom(6);
+
+  const postData = qs.stringify({
+    phone: to,
+    callback: "01030363420",
+    message: `[playlist-M] SMS 인증번호: ${random}`,
+    refkey: uniqid(),
+  });
+  // console.log({ postData });
+
   const options = {
     method: "POST",
     hostname: "sms.gabia.com",
     path: "/api/send/sms",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(postData),
       Authorization: `Basic ${authorization}`,
     },
   };
   console.log({ options });
-
   const hashed = await hash(random);
 
   try {
@@ -55,13 +64,6 @@ router.post("/send", async function (req, res, next) {
         });
       });
     });
-    const postData = qs.stringify({
-      phone: to,
-      callback: "01030363420",
-      message: `[playlist-M] SMS 인증번호: ${random}`,
-      refkey: uniqid(),
-    });
-    console.log({ postData });
 
     // request Gabia SMS rest api !
     request.write(postData);
