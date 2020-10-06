@@ -37,27 +37,21 @@ router.post("/send", async function (req, res, next) {
       path: "/api/send/sms",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        // "Content-Length": Buffer.byteLength(postData),
+        "Content-Length": Buffer.byteLength(postData),
         Authorization: `Basic ${authorization}`,
       },
     };
     console.log({ options });
     const hashed = await hash(random);
 
-    const request = https.request(options, (msg) => {
+    const request = https.request(options, function (incomingMessage) {
       const chunks = [];
-
-      msg.on("data", (chunk) => {
+      incomingMessage.on("data", (chunk) => {
         // console.log({ chunk: chunk.toString() });
         chunks.push(chunk);
       });
-      msg.on("error", function (error) {
-        console.error({ error });
-        next(error);
-      });
-      msg.on("end", () => {
+      incomingMessage.on("end", () => {
         const body = Buffer.concat(chunks);
-
         console.log("send end...");
         res.status(200).json({
           msg: "SEND_OK",
@@ -66,11 +60,14 @@ router.post("/send", async function (req, res, next) {
           body: body.toString(),
         });
       });
+      incomingMessage.on("error", function (error) {
+        console.error({ error });
+      });
     });
 
     // request Gabia SMS rest api !
     request.write(postData);
-    request.end();
+    // request.end();
   } catch (error) {
     next(error);
   }
