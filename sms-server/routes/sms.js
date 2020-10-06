@@ -30,7 +30,7 @@ router.post("/send", async function (req, res, next) {
       message: `[playlist-M] SMS 인증번호: ${random}`,
       refkey: uniqid(),
     });
-    // console.log({ postData });
+    console.log({ postData });
 
     const options = {
       method: "POST",
@@ -53,12 +53,13 @@ router.post("/send", async function (req, res, next) {
       incomingMessage.on("end", () => {
         const body = Buffer.concat(chunks);
         console.log("send end..." + body.toString());
-        // res.status(200).json({
-        //   msg: "SEND_OK",
-        //   server: hashed,
-        //   dev: random,
-        //   body: body.toString(),
-        // });
+
+        res.status(200).json({
+          msg: "SEND_OK",
+          server: hashed,
+          dev: random,
+          body: body.toString(),
+        });
       });
       incomingMessage.on("error", function (error) {
         console.error({ error });
@@ -68,8 +69,6 @@ router.post("/send", async function (req, res, next) {
     // request Gabia SMS rest api !
     request.write(postData);
     request.end();
-
-    res.end("end");
   } catch (error) {
     next(error);
   }
