@@ -22,12 +22,13 @@ router.post("/send", async function (req, res, next) {
     );
     console.log({ authorization });
     const random = generatorRandom(6);
+    console.log({ random });
     const hashed = await hash(random);
 
     const postData = qs.stringify({
       phone: to,
       callback: "01030363420",
-      message: `[playlist-M] SMS 인증번호: ${random}`,
+      message: "[playlist-M] SMS 인증번호: " + random,
       refkey: uniqid(),
     });
     console.log({ postData });
@@ -39,7 +40,7 @@ router.post("/send", async function (req, res, next) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "Content-Length": Buffer.byteLength(postData),
-        Authorization: `Basic ${authorization}`,
+        Authorization: "Basic " + authorization,
       },
     };
     console.log({ options });
@@ -77,14 +78,14 @@ router.post("/send", async function (req, res, next) {
 router.post("/send2", async (req, res, next) => {
   const { to } = req.body;
   console.log({ to, apiKey: process.env.SMS_API_KEY });
-  const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
+  const authorization = base64.encode("spring3420:" + process.env.SMS_API_KEY);
   console.log({ authorization });
   const random = generatorRandom(6);
 
   const postData = {
     phone: to,
     callback: "01030363420",
-    message: `[playlist-M] SMS 인증번호: ${random}`,
+    message: "playlist-M SMS 인증번호 " + random,
     refkey: uniqid(),
   };
   // console.log({ postData });
