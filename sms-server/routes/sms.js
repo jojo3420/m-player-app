@@ -3,6 +3,8 @@ const router = express.Router();
 const qs = require("qs");
 const https = require("https");
 const uniqid = require("uniqid");
+const base64 = require("base-64");
+
 const { generatorRandom, hash } = require("../lib/util");
 
 router.get("/", (req, res, next) => {
@@ -12,6 +14,9 @@ router.get("/", (req, res, next) => {
 /* GET home page. */
 router.post("/send", async function (req, res, next) {
   const { to } = req.body;
+  console.log({ to });
+  const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
+  console.log({ authorization });
   const random = generatorRandom(6);
   const options = {
     method: "POST",
@@ -19,10 +24,10 @@ router.post("/send", async function (req, res, next) {
     path: "/api/send/sms",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: process.env.SMS_API_KEY,
-      // "Basic DckviEksLs6ZXlKMGVYQWlPaUpLVhiR2NpT2lKU1V6STFOaUo5LmV5SnBjM01pT2lKb2RIUndjenBjTDF3dmMyMXpMbWRoWW1saExtTnZiVnd2SWl3aVlYVmtJam9pWEM5dllYVjBhRnd2ZEc5clpXNGlMQ0pshWFhnT2pBNG5uVkVuLWtnVEJoRGpPeWc=",
+      Authorization: `Basic ${authorization}`,
     },
   };
+  console.log({ options });
 
   const hashed = await hash(random);
 
@@ -31,13 +36,14 @@ router.post("/send", async function (req, res, next) {
       const chunks = [];
 
       msg.on("data", (chunk) => {
+        // console.log({ chunk: chunk.toString() });
         chunks.push(chunk);
       });
       msg.on("error", function (error) {
         console.error({ error });
         next(error);
       });
-      msg.on("end", (chunk) => {
+      msg.on("end", () => {
         const body = Buffer.concat(chunks);
 
         console.log("send end...");
@@ -52,7 +58,7 @@ router.post("/send", async function (req, res, next) {
     const postData = qs.stringify({
       phone: to,
       callback: "01030363420",
-      message: "SMS 인증번호: " + random,
+      message: "[playlist-M] SMS 인증번호: " + random,
       refkey: uniqid(),
     });
     // request Gabia SMS rest api !
