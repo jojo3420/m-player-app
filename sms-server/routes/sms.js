@@ -12,6 +12,50 @@ const { generatorRandom, hash } = require("../lib/util");
 //   res.end("sms");
 // });
 
+router.post("/auth", (req, res, next) => {
+  // const { to } = req.body;
+  // console.log({ to, apiKey: process.env.SMS_API_KEY });
+
+  const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
+
+  const postData = qs.stringify({
+    grant_type: "client_credentials",
+  });
+
+  const authOptions = {
+    method: "POST",
+    hostname: "sms.gabia.com",
+    path: "/oauth/token",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(postData),
+      Authorization: `Basic ${authorization}`,
+    },
+  };
+
+  const request1 = https.request(authOptions, function (incomingMessage) {
+    const chunks = [];
+
+    incomingMessage.on("data", function (chunk) {
+      chunks.push(chunk);
+    });
+
+    incomingMessage.on("end", function (chunk) {
+      const body = Buffer.concat(chunks);
+      console.log(body.toString());
+
+      res.json({ body: body.toJSON() });
+    });
+
+    incomingMessage.on("error", function (error) {
+      console.error(error);
+    });
+  });
+
+  request1.write(authOptions);
+  request1.end();
+});
+
 /* GET home page. */
 router.post("/send", async function (req, res, next) {
   try {
