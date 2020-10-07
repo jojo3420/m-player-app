@@ -22,7 +22,7 @@ router.post("/auth", (req, res, next) => {
     grant_type: "client_credentials",
   });
 
-  const authOptions = {
+  const options = {
     method: "POST",
     hostname: "sms.gabia.com",
     path: "/oauth/token",
@@ -32,28 +32,32 @@ router.post("/auth", (req, res, next) => {
       Authorization: `Basic ${authorization}`,
     },
   };
+  try {
+    const request1 = https.request(options, function (incomingMessage) {
+      const chunks = [];
 
-  const request1 = https.request(authOptions, function (incomingMessage) {
-    const chunks = [];
+      incomingMessage.on("data", function (chunk) {
+        chunks.push(chunk);
+      });
 
-    incomingMessage.on("data", function (chunk) {
-      chunks.push(chunk);
+      incomingMessage.on("end", function (chunk) {
+        const body = Buffer.concat(chunks);
+        console.log(body.toString());
+
+        res.json({ msg: "OK", body: body.toString() });
+      });
+
+      incomingMessage.on("error", function (error) {
+        console.error(error);
+      });
     });
 
-    incomingMessage.on("end", function (chunk) {
-      const body = Buffer.concat(chunks);
-      console.log(body.toString());
-
-      res.json({ body: body.toJSON() });
-    });
-
-    incomingMessage.on("error", function (error) {
-      console.error(error);
-    });
-  });
-
-  request1.write(authOptions);
-  request1.end();
+    request1.write(postData);
+    request1.end();
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
 });
 
 /* GET home page. */
