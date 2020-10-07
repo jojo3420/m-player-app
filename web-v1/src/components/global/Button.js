@@ -26,12 +26,13 @@ const StyledButton = styled.button`
   color: white;
   outline: none;
   cursor: pointer;
-  background: ${palette.gray[8]};
+  background: ${({ color }) => (color ? palette[color][7] : palette.gray[7])};
   &:hover {
-    background: ${palette.gray[6]};
+    background: ${({ color }) => (color ? palette[color][6] : palette.gray[6])};
   }
+
   ${(props) =>
-    props['fullWidth'] &&
+    props.fullWidth &&
     css`
       padding-top: 0.75rem;
       padding-bottom: 0.75rem;

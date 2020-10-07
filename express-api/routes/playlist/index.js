@@ -15,11 +15,14 @@ const {
 // married = 30 OR age > 30
 
 const router = express.Router()
+const perItemCnt = 28
 
 // 플레이리스트 조회
-router.get('/:email', async (req, res, next) => {
-  const { email } = req.params
+router.get('/:email/:page', async (req, res, next) => {
+  let { email, page } = req.params
   // console.log({ email })
+  if (!page) page = 1
+
   try {
     const member = await Member.findOne({
       attributes: ['id', 'email'],
@@ -34,7 +37,8 @@ router.get('/:email', async (req, res, next) => {
     }
     const playlist = await member.getPlayLists({
       attributes: ['id', 'title', 'email', 'description', 'avatar'],
-      limit: 28,
+      limit: perItemCnt,
+      offset: page * perItemCnt,
       order: [['id', 'DESC']],
     })
     res

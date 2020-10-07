@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import palette from 'lib/styles/palette'
 import Button from 'components/global/Button'
+import StyledInput from 'components/global/StyledInput'
+import StyledLink from 'components/global/StyledLink'
+import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
 
 /**
  * 회원 가입 및 로그인 폼
@@ -13,7 +16,7 @@ import Button from 'components/global/Button'
 
 function LoginForm({ register, errors, handleSubmit, onSubmit }) {
   return (
-    <AuthFormBlock>
+    <FormBlockWithTitle>
       <h3>로그인</h3>
       <form onSubmit={handleSubmit(onSubmit)}>
         <StyledInput
@@ -40,54 +43,19 @@ function LoginForm({ register, errors, handleSubmit, onSubmit }) {
           <Link to="/find/pwd">비밀번호 찾기</Link>
         </StyledFindBlock>
 
-        <ButtonWithMarginTop type="submit" fullWidth color="indigo">
+        <ButtonWithMarginTop type="submit" color="indigo" fullWidth>
           로그인 하기
         </ButtonWithMarginTop>
         <StyledLink>
           <Link to="/signup">회원 가입</Link>
         </StyledLink>
       </form>
-    </AuthFormBlock>
+    </FormBlockWithTitle>
   )
 }
 
-const AuthFormBlock = styled.div`
-  h3 {
-    color: ${palette.gray[8]};
-    margin: 0 0 1.2rem;
-    font-size: 1.3rem;
-  }
-`
-
-const StyledInput = styled.input`
-  font-size: 1rem;
-  border: none;
-  border-bottom: 1px solid ${palette.gray[5]};
-  padding-bottom: 0.5rem;
-  outline: none;
-  width: 100%;
-  &:focus {
-    color: ${palette.gray[8]};
-    border-bottom: 1px solid ${palette.gray[7]};
-  }
-  & + & {
-    margin-top: 1rem;
-  }
-`
 const ButtonWithMarginTop = styled(Button)`
   margin-top: 1.5rem;
-`
-
-const StyledLink = styled.div`
-  margin-top: 2rem;
-  text-align: right;
-  a {
-    color: ${palette.gray[6]};
-    text-decoration: underline;
-  }
-  &:hover {
-    color: ${palette.gray[9]};
-  }
 `
 
 const StyledCheckboxBlock = styled.div`

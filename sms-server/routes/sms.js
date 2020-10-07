@@ -12,10 +12,7 @@ const { generatorRandom, hash } = require("../lib/util");
 //   res.end("sms");
 // });
 
-router.post("/auth", (req, res, next) => {
-  // const { to } = req.body;
-  // console.log({ to, apiKey: process.env.SMS_API_KEY });
-
+async function auth() {
   const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
 
   const postData = qs.stringify({
@@ -40,11 +37,110 @@ router.post("/auth", (req, res, next) => {
         chunks.push(chunk);
       });
 
-      incomingMessage.on("end", function (chunk) {
+      incomingMessage.on("end", async function (chunk) {
         const body = Buffer.concat(chunks);
-        console.log(body.toString());
+        // console.log(body.toString());
+        const json = JSON.parse(body.toString());
+        // console.log({ json });
+        const accessToken = json["access_token"];
+        return accessToken;
+      });
 
-        res.json({ msg: "OK", body: body.toString() });
+      incomingMessage.on("error", function (error) {
+        console.error(error);
+      });
+    });
+
+    request1.write(postData);
+    request1.end();
+  } catch (e) {
+    console.error(e);
+  }
+}
+/* GET home page. */
+router.post("/send", async function (req, res, next) {
+  const authorization = base64.encode(`spring3420:${process.env.SMS_API_KEY}`);
+
+  const postData = qs.stringify({
+    grant_type: "client_credentials",
+  });
+
+  const options = {
+    method: "POST",
+    hostname: "sms.gabia.com",
+    path: "/oauth/token",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Length": Buffer.byteLength(postData),
+      Authorization: `Basic ${authorization}`,
+    },
+  };
+  try {
+    const request1 = https.request(options, function (incomingMessage) {
+      const chunks = [];
+
+      incomingMessage.on("data", function (chunk) {
+        chunks.push(chunk);
+      });
+
+      incomingMessage.on("end", async function (chunk) {
+        const body = Buffer.concat(chunks);
+        // console.log(body.toString());
+        const json = JSON.parse(body.toString());
+        // console.log({ json });
+        const accessToken = json["access_token"];
+        console.log({ accessToken });
+
+        const { to } = req.body;
+        const authorization = base64.encode(`spring3420:${accessToken}`);
+        // console.log({ authorization });
+        const random = generatorRandom(6);
+        // console.log({ random });
+        const hashed = await hash(random);
+
+        const postData = qs.stringify({
+          phone: to,
+          callback: "01030363420",
+          message: "[playlist-M] SMS 인증번호: " + random,
+          refkey: uniqid(),
+        });
+        // console.log({ postData });
+
+        const options = {
+          method: "POST",
+          hostname: "sms.gabia.com",
+          path: "/api/send/sms",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": Buffer.byteLength(postData),
+            Authorization: "Basic " + authorization,
+          },
+        };
+
+        const request = https.request(options, function (incomingMessage) {
+          const chunks = [];
+          incomingMessage.on("data", (chunk) => {
+            chunks.push(chunk);
+          });
+          incomingMessage.on("end", () => {
+            const body = Buffer.concat(chunks);
+            // console.log("send end..." + body.toString());
+
+            res.status(200).json({
+              msg: "SEND_OK",
+              server: hashed,
+              dev: random,
+              body: body.toString(),
+            });
+          });
+          incomingMessage.on("error", function (error) {
+            console.error({ error });
+          });
+        });
+
+        // request Gabia SMS rest api !
+        request.write(postData);
+        request.end();
       });
 
       incomingMessage.on("error", function (error) {
@@ -57,69 +153,6 @@ router.post("/auth", (req, res, next) => {
   } catch (e) {
     console.error(e);
     next(e);
-  }
-});
-
-/* GET home page. */
-router.post("/send", async function (req, res, next) {
-  try {
-    const { to } = req.body;
-    console.log({ to, apiKey: process.env.SMS_API_KEY });
-    const authorization = base64.encode(
-      `spring3420:${process.env.SMS_API_KEY}`
-    );
-    console.log({ authorization });
-    const random = generatorRandom(6);
-    console.log({ random });
-    const hashed = await hash(random);
-
-    const postData = qs.stringify({
-      phone: to,
-      callback: "01030363420",
-      message: "[playlist-M] SMS 인증번호: " + random,
-      refkey: uniqid(),
-    });
-    console.log({ postData });
-
-    const options = {
-      method: "POST",
-      hostname: "sms.gabia.com",
-      path: "/api/send/sms",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Content-Length": Buffer.byteLength(postData),
-        Authorization: "Basic " + authorization,
-      },
-    };
-    console.log({ options });
-
-    const request = https.request(options, function (incomingMessage) {
-      const chunks = [];
-      incomingMessage.on("data", (chunk) => {
-        // console.log({ chunk: chunk.toString() });
-        chunks.push(chunk);
-      });
-      incomingMessage.on("end", () => {
-        const body = Buffer.concat(chunks);
-        console.log("send end..." + body.toString());
-
-        res.status(200).json({
-          msg: "SEND_OK",
-          server: hashed,
-          dev: random,
-          body: body.toString(),
-        });
-      });
-      incomingMessage.on("error", function (error) {
-        console.error({ error });
-      });
-    });
-
-    // request Gabia SMS rest api !
-    request.write(postData);
-    request.end();
-  } catch (error) {
-    next(error);
   }
 });
 

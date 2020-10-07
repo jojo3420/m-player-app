@@ -13,6 +13,7 @@
     "antd": "^4.6.6",
     "axios": "^0.20.0",
     "bcryptjs": "^2.4.3",
+    "better-react-spinkit": "^2.0.4",
     "dotenv": "^8.2.0",
     "eslint-plugin-react-hooks": "^4.1.2",
     "immer": "^7.0.9",

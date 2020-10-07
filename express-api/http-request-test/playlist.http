@@ -1,7 +1,7 @@
 
 
 ### Get Playlist
-GET http://localhost:4000/playlist/kkk@kkk.com
+GET http://localhost:4000/playlist/kkk@kkk.com/3
 Accept: application/json
 
 ###

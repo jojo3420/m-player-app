@@ -26,7 +26,7 @@ const playListReducer = handleActions(
   {
     [GET_PLAY_LIST_BY_SUCCESS]: (state, { payload }) => {
       return produce(state, (draft) => {
-        draft.list = payload.playlist
+        draft.list = draft.list.concat(payload.playlist)
       })
     },
     [GET_PLAY_LIST_BY_FAILURE]: (state, action) => {
