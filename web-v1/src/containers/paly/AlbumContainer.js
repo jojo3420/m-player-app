@@ -2,15 +2,28 @@ import React, { useEffect, useState, useCallback } from 'react'
 import Album from 'components/play/Album'
 import axios from 'axios'
 import { message } from 'antd'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import LoginGuard from 'containers/auth/LoginGuard'
+import { getMediaByPlayListId } from 'modules/playlist'
 
-function AlbumContainer({}) {
+function AlbumContainer({ album, getMediaByPlayListId }) {
   const params = useParams()
   const { id } = params
-  console.log({ id })
+
+  const [mediaList, setMediaList] = useState(null)
+
+  useEffect(() => {
+    // console.log({ id })
+    const fetchMedia = async () => {
+      console.log({ id })
+      await getMediaByPlayListId(id)
+    }
+
+    fetchMedia()
+  }, [id])
+
   const [formField, setField] = useState({
     title: '',
     artist: '',
@@ -69,6 +82,7 @@ function AlbumContainer({}) {
     <>
       <LoginGuard />
       <Album
+        album={album}
         formField={formField}
         handleField={handleField}
         handleAudios={handleAudios}
@@ -78,10 +92,17 @@ function AlbumContainer({}) {
   )
 }
 export default connect(
-  ({ auth }) => {
+  ({ auth, playList }) => {
     return {
       auth: auth.auth,
+      album: playList.album,
     }
   },
-  (dispatch) => bindActionCreators({}, dispatch),
+  (dispatch) =>
+    bindActionCreators(
+      {
+        getMediaByPlayListId,
+      },
+      dispatch,
+    ),
 )(AlbumContainer)

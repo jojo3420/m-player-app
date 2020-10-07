@@ -14,30 +14,40 @@ function PlayList({ playList, loading, gotoDetail }) {
   useTitle('플레이리스트 목록')
 
   if (Array.isArray(playList) && playList.length === 0) {
-    return <div>데이터가 없습니다.</div>
+    // TODO: empty playlist
+    return (
+      <Row justify="center" gutter={[16, { xs: 8, sm: 16, md: 24, lg: 32 }]}>
+        <div>empty playlist</div>
+      </Row>
+    )
   }
   return (
     <>
       {loading && <StyledSpinner loading={loading} />}
       <div className="site-card-wrapper">
         {playList.map((innerList, index) => {
-          return <PlayListRow key={index} innerList={innerList} />
+          return (
+            <PlayListRow
+              key={index}
+              innerList={innerList}
+              gotoDetail={gotoDetail}
+            />
+          )
         })}
       </div>
     </>
   )
 }
 
-function PlayListRow({ innerList }) {
+function PlayListRow({ innerList, gotoDetail }) {
   const Items =
     innerList &&
     innerList.map((item) => {
-      const { id, title, email, description, avatar } = item
+      const { id, title, description, avatar } = item
 
       return (
-        <Col key={id} offset={0.5}>
+        <Col key={id} offset={0.5} onClick={gotoDetail.bind(this, item)}>
           <Card
-            onClick={() => alert(title)}
             span={8}
             hoverable
             style={{ width: 240 }}

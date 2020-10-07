@@ -2,17 +2,15 @@ import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react'
 import PlayList from 'components/play/PlayList'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { message } from 'antd'
 import LoginGuard from 'containers/auth/LoginGuard'
-import { getPlayListBy } from 'modules/playlist'
-import { useForm } from 'react-hook-form'
+import { getPlayListBy, activeAlbum } from 'modules/playlist'
+import { useHistory } from 'react-router-dom'
 import PlayListForm from 'components/play/PlayListForm'
 import StyledLink from 'components/global/StyledLink'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import Button from 'components/global/Button'
-import StyledSpinner from 'components/global/StyledSpinner'
-// import useInfinityScroll from 'lib/hooks/useInfinityScroll'
+// import { message } from 'antd'
+// import { useForm } from 'react-hook-form'
 
 PlayListContainer.propTypes = {
   auth: PropTypes.object,
@@ -21,7 +19,14 @@ PlayListContainer.propTypes = {
   getPlayListBy: PropTypes.func,
 }
 
-function PlayListContainer({ auth, playList, loadingPlayList, getPlayListBy }) {
+function PlayListContainer({
+  auth,
+  playList,
+  loadingPlayList,
+  getPlayListBy,
+  activeAlbum,
+}) {
+  const history = useHistory()
   const [formPageVisible, setFormPageVisible] = useState(false)
   // const { register, handleSubmit, watch, errors } = useForm()
   const [title, setTitle] = useState('')
@@ -56,6 +61,12 @@ function PlayListContainer({ auth, playList, loadingPlayList, getPlayListBy }) {
     e.preventDefault()
   }, [])
 
+  const gotoDetail = useCallback((album) => {
+    const { id } = album
+    history.push(`/playlist/${id}`)
+    activeAlbum(album)
+  }, [])
+
   return (
     <>
       <LoginGuard />
@@ -74,7 +85,11 @@ function PlayListContainer({ auth, playList, loadingPlayList, getPlayListBy }) {
               <Link to="#">신규 추가</Link>
             </StyledLink>
           </div>
-          <PlayList playList={playList} loading={loadingPlayList} />
+          <PlayList
+            playList={playList}
+            loading={loadingPlayList}
+            gotoDetail={gotoDetail}
+          />
         </>
       )}
     </>
@@ -93,6 +108,7 @@ export default connect(
     bindActionCreators(
       {
         getPlayListBy,
+        activeAlbum,
       },
       dispatch,
     ),

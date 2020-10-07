@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import {
   ChasingDots,
   Circle,
@@ -31,6 +31,7 @@ const SpinnerBlock = styled.div`
   //align-items: center;
   //padding-top: 1rem;
   //padding-bottom: 1rem;
+  z-index: 100;
   position: absolute;
   left: 400px;
   top: 250px;

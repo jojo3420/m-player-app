@@ -1,14 +1,14 @@
 import React from 'react'
 import useTitle from 'lib/hooks/useTitle'
 import MyLayout from 'components/layout/MyLayout'
-import About from 'components/About'
+import Home from 'components/Home'
 
-export default function AboutPage() {
-  useTitle('서비스 소개')
+export default function HomePage() {
+  useTitle('Home')
 
   return (
     <MyLayout>
-      <About />
+      <Home />
     </MyLayout>
   )
 }

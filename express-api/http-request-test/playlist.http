@@ -1,13 +1,22 @@
 
 
 ### Get Playlist
+# params:
+# 1> email,
+# 2> page
 GET http://localhost:4000/playlist/kkk@kkk.com/3
 Accept: application/json
 
 ###
 
+### get Playlist by id
+GET http://localhost:4000/playlist/317
+Accept: application/json
 
-### Create Playlist by id
+###
+
+
+### Create Playlist
 POST http://localhost:4000/playlist
 Content-Type: application/json
 

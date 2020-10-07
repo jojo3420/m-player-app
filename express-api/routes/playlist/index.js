@@ -50,7 +50,7 @@ router.get('/:email/:page', async (req, res, next) => {
   }
 })
 
-// 플레이 리스트 생성
+// 플레이 리스트 생성 - Create
 router.post('/', async (req, res, next) => {
   const { id, title, description, email, avatar } = req.body
   // console.log({ title, description, email, avatar })
@@ -135,20 +135,22 @@ router.delete('/:id', async (req, res, next) => {
   }
 })
 
-// router.get('/:email/:id', async (req, res, next) => {
-//   // const id
-//   const { id } = req.params
-//   try {
-//     const playlist = await PlayList.findOne({ where: { id } })
-//     // console.log('media: ', playlist.getMedias({}))
-//     res.json({
-//       status: 'OK',
-//       playlist,
-//     })
-//   } catch (err) {
-//     next(err, req, res, next)
-//   }
-// })
-//
+router.get('/:id', async (req, res, next) => {
+  // playlist id
+  const { id } = req.params
+  try {
+    const playlist = await PlayList.findOne({ where: { id } })
+
+    // @TODO - media
+    // console.log('media: ', playlist.getMedias({}))
+    res.json({
+      status: 'OK',
+      album: playlist,
+      mediaList: [1, 2, 3],
+    })
+  } catch (err) {
+    next(err, req, res, next)
+  }
+})
 
 module.exports = router
