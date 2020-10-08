@@ -1,0 +1,22 @@
+
+### express api server sms  요청
+POST http://localhost:4000/sms/send
+Content-Type: application/json
+
+{
+ "to": "01030363420"
+}
+
+###
+
+
+### AWS - SMS 전송 서버
+POST http://15.165.176.142:40001/sms/send
+Content-Type: application/json
+
+{
+   "to": "010303634220",
+   "message": "sample message"
+}
+
+###
