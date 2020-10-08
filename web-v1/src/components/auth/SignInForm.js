@@ -40,7 +40,7 @@ function SignInForm({ register, errors, handleSubmit, onSubmit }) {
         <StyledFindBlock>
           <Link to="/find/id">아이디 찾기 </Link>
           <span> | </span>
-          <Link to="/find/pwd">비밀번호 찾기</Link>
+          <Link to="/find/pw">비밀번호 찾기</Link>
         </StyledFindBlock>
 
         <ButtonWithMarginTop type="submit" color="indigo" fullWidth>
