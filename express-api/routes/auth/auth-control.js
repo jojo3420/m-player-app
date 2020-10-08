@@ -76,7 +76,7 @@ exports.signUp = async (req, res, next) => {
     })
     const token = generateToken(member)
     res.cookie('access_token', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 유지 기간 7days
       httpOnly: true,
     })
     res.status(201).json({
@@ -115,7 +115,7 @@ exports.signIn = async (req, res, next) => {
     const token = generateToken(member)
     res.cookie('access_token', token, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
     })
 
     res.json(serialize(member))

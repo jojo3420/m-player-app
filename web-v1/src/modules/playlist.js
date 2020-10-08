@@ -55,7 +55,7 @@ const playListReducer = handleActions(
       })
     },
     [GET_MEDIA_BY_PLAYLIST_ID_SUCCESS]: (state, { payload }) => {
-      console.log({ payload })
+      // console.log({ payload })
       return produce(state, (draft) => {
         if (!draft.album) draft.album = payload.album
 
