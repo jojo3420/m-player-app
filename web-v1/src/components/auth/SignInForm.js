@@ -14,7 +14,7 @@ import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
  * @constructor
  */
 
-function LoginForm({ register, errors, handleSubmit, onSubmit }) {
+function SignInForm({ register, errors, handleSubmit, onSubmit }) {
   return (
     <FormBlockWithTitle>
       <h3>로그인</h3>
@@ -83,4 +83,4 @@ const StyledFindBlock = styled.div`
   }
 `
 
-export default LoginForm
+export default SignInForm

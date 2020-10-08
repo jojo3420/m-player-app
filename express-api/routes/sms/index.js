@@ -12,7 +12,7 @@ router.post('/send', async function (req, res, next) {
   // console.log({ to, type })
 
   const member = await Member.findOne({
-    where: { mobile: to },
+    where: { mobile: to.replace(/-/g, '') },
   })
   // console.log({ member })
 
@@ -48,10 +48,9 @@ router.post('/send', async function (req, res, next) {
           log: message,
         })
         res.status(200).json({
-          msg: response.data.msg,
+          msg: 'SEND_OK',
           server: await hashPw(random),
-          // @TODO REMOVE dev
-          dev: random,
+          // dev: random,
         })
       }
     } catch (e) {

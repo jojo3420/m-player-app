@@ -4,8 +4,8 @@ import createRequestThunk from 'lib/createRequestThunk'
 import * as api from 'lib/api/auth'
 import produce from 'immer'
 // import { clearToken } from 'lib/localStorage'
-// import { takeLatest, throttle } from 'redux-saga/effects'
-// import createRequestSaga from 'lib/createRequestSaga'
+import { takeLatest, throttle } from 'redux-saga/effects'
+import createRequestSaga from 'lib/createRequestSaga'
 
 // Action
 const PREFIX = 'auth'
@@ -27,6 +27,11 @@ const [IS_AVAILABLE_MEMBER, , IS_AVAILABLE_MEMBER_FAILURE] = makeActionTypes(
 const [SEND_SMS, SEND_SMS_SUCCESS, SEND_SMS_FAILURE] = makeActionTypes(
   `${PREFIX}/SEND_SMS`,
 )
+// const [
+//   SEND_SMS_SAGA,
+//   SEND_SMS_SAGA_SUCCESS,
+//   SEND_SMS_SAGA_FAILURE,
+// ] = makeActionTypes(`${PREFIX}/SEND_SMS_SAGA`)
 
 // Action Creator
 export const onIsAvailable = createRequestThunk(
@@ -39,13 +44,16 @@ export const onSignUp = createRequestThunk(SIGN_UP, api.signUp)
 export const onCheckLogin = createRequestThunk(CHECK_LOGIN, api.checkLogin)
 export const sendSMS = createRequestThunk(SEND_SMS, api.sendSMS)
 
-// Saga Action Creator
+// Saga Action Creator -
 // export const onSignUp = createAction(SIGN_UP, (member) => member)
+// export const sendSMS = createAction(SEND_SMS, (smsObj) => smsObj) // { to: '010-1234-1234', type: 'auth'}
 
 // const signUpSaga = createRequestSaga(SIGN_UP, api.signUp)
+// const sendSMSSaga = createRequestSaga(SEND_SMS_SAGA, api.sendSMS)
 
 export function* authSaga() {
   // yield throttle(3000, SIGN_UP, signUpSaga)
+  // yield throttle(3000, SEND_SMS, sendSMSSaga)
 }
 
 // State
@@ -150,6 +158,13 @@ const auth = handleActions(
         draft.sms.msg = response.msg
       })
     },
+    // [SEND_SMS_SAGA_SUCCESS]: (state, { payload }) => {
+    //   return produce(state, (draft) => {
+    //     draft.sms.send = true
+    //     draft.sms.msg = payload.msg
+    //     draft.sms.server = payload.server
+    //   })
+    // },
   },
   initialState,
 )

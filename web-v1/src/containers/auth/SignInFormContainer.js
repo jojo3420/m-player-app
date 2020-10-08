@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import AuthTemplate from 'components/auth/AuthTemplate'
 import { bindActionCreators } from 'redux'
 import { useForm } from 'react-hook-form'
-import LoginForm from 'components/auth/LoginForm'
+import SignInForm from 'components/auth/SignInForm'
 
 function SignInFormContainer({ auth, signIn, check, onSignIn, onCheckLogin }) {
   const history = useHistory()
@@ -49,7 +49,7 @@ function SignInFormContainer({ auth, signIn, check, onSignIn, onCheckLogin }) {
 
   return (
     <AuthTemplate>
-      <LoginForm
+      <SignInForm
         register={register}
         errors={errors}
         handleSubmit={handleSubmit}

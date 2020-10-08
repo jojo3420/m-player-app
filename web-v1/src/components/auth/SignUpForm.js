@@ -114,7 +114,7 @@ export default function SignUpForm({
             onChange={onChangeUsername}
             placeholder={'닉네임 입력'}
             minLength={2}
-            maxLength={5}
+            maxLength={20}
             required={true}
           />
           <ButtonWithMarginTop type="submit" fullWidth color="indigo">

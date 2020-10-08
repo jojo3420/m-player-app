@@ -52,7 +52,7 @@ function SignUpFormContainer({
       e.preventDefault()
       if (isMobileValid) {
         try {
-          // @TODO - SMS SEND
+          // Saga actionCreator는  예외가 던져 지지 않음
           await sendSMS({ to: mobile.replace(/-/g, ''), type: 'auth' })
           setIsSend(true)
         } catch (err) {
@@ -78,8 +78,9 @@ function SignUpFormContainer({
     async (e) => {
       e.preventDefault()
       // email, pw1,, username, mobile, certificationNo
-      console.log({ serverNo, certificationNo })
-      if (bcrypt.compare(certificationNo, serverNo)) {
+      // console.log({ serverNo, certificationNo })
+      const isMatch = await bcrypt.compare(certificationNo, serverNo)
+      if (isMatch) {
         await onSignUp({ email, pw: pw1, username, mobile })
         await onCheckLogin()
         message.success('회원가입 성공!')
@@ -90,17 +91,9 @@ function SignUpFormContainer({
     [email, pw1, username, mobile, serverNo, certificationNo, onSignUp],
   )
 
-  // useEffect(() => {
-  // if (signUp && signUp.status >= 400) {
-  //   message.error(signUp.msg || '회원 가입이 실패했습니다.')
-  // } else if (available && available.status === 403) {
-  //   message.warning(available.msg || '이미 사용중인 회원 정보 입니다.')
-  // }
-  // return () => null
-  // }, [signUp, available])
-
   const onBlurMobile = useCallback(() => {
     const bool = validationMobile(mobile)
+    // console.log({ bool })
     setIsMobileValid(bool)
   }, [mobile])
 
