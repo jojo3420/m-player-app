@@ -18,6 +18,7 @@ db.Sequelize = Sequelize
 db.Member = require('./Member')(sequelize, Sequelize)
 db.Media = require('./Media')(sequelize, Sequelize)
 db.PlayList = require('./PlayList')(sequelize, Sequelize)
+db.SmsHistory = require('./SmsHistory')(sequelize, Sequelize)
 
 // 멤버와 플레이리스트 1:N 관계
 db.Member.hasMany(db.PlayList, { foreignKey: 'member_id', sourceKey: 'id' })
