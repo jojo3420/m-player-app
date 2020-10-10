@@ -12,8 +12,8 @@ const PREFIX = 'auth'
 const [SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE] = makeActionTypes(
   `${PREFIX}/SIGN_IN`,
 )
-const [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE] = makeActionTypes(
-  `${PREFIX}/LOGOUT`,
+const [LOG_OUT, LOGOUT_SUCCESS, LOGOUT_FAILURE] = makeActionTypes(
+  `${PREFIX}/LOG_OUT`,
 )
 const [SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAILURE] = makeActionTypes(
   `${PREFIX}/SIGN_UP`,
@@ -39,7 +39,7 @@ export const onIsAvailable = createRequestThunk(
   api.isAvailable,
 )
 export const onSignIn = createRequestThunk(SIGN_IN, api.signIn)
-export const onLogout = createRequestThunk(LOGOUT, api.logout)
+export const onLogout = createRequestThunk(LOG_OUT, api.logout)
 export const onSignUp = createRequestThunk(SIGN_UP, api.signUp)
 export const onCheckLogin = createRequestThunk(CHECK_LOGIN, api.checkLogin)
 export const sendSMS = createRequestThunk(SEND_SMS, api.sendSMS)
@@ -101,7 +101,6 @@ const auth = handleActions(
     [SIGN_UP_SUCCESS]: (state, { payload: auth }) =>
       produce(state, (draft) => {
         draft.auth = auth
-        // draft.signUp = initialState.signUp
       }),
     [SIGN_UP_FAILURE]: (state, { e, error, response }) =>
       produce(state, (draft) => {
@@ -126,7 +125,7 @@ const auth = handleActions(
         draft.signIn.error = error
       }),
     [LOGOUT_SUCCESS]: () => {
-      // clearToken()
+      //  server 에서 cookie 삭제함
       return initialState
     },
     [LOGOUT_FAILURE]: (state, { e }) =>

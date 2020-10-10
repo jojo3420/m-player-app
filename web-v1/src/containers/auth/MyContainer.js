@@ -7,7 +7,6 @@ function MyContainer({}) {
   return (
     <>
       <My />
-      <LoginGuard />
     </>
   )
 }

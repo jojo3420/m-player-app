@@ -100,24 +100,19 @@ function SignUpFormContainer({
     setIsMobileValid(bool)
   }, [mobile])
 
-  // login check ok
+  // check login
   useEffect(() => {
-    if (check.logged) {
-      console.log('login check ok.')
-    }
-    return () => null
-  }, [check])
+    console.log('useEffect! checklogin')
+    const checkLogin = async () => await onCheckLogin()
+
+    checkLogin()
+  }, [])
 
   useEffect(() => {
-    if (auth) {
-      try {
-        localStorage.setItem('auth', JSON.stringify(auth))
-      } catch (e) {
-        console.log('회원 가입 로컬 스토리지 저장 실패.' + e)
-      }
+    if (check.logged || auth) {
       history.push('/')
     }
-  }, [auth])
+  }, [check, auth])
 
   return (
     <AuthTemplate>

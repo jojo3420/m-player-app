@@ -10,8 +10,8 @@ import { validationEmail } from 'lib/validator'
 
 function SignInFormContainer({ auth, signIn, check, onSignIn, onCheckLogin }) {
   const history = useHistory()
-  const [email, setEmail] = useState('')
-  const [pw, setPw] = useState('')
+  const [email, setEmail] = useState('kkk@kkk.com')
+  const [pw, setPw] = useState('test1234')
 
   const onLoginSubmit = useCallback(
     async (e) => {
@@ -37,10 +37,10 @@ function SignInFormContainer({ auth, signIn, check, onSignIn, onCheckLogin }) {
     }
   }, [signIn])
 
-  // login check ok
+  // check login
   useEffect(() => {
-    const onLogin = async () => await onCheckLogin()
-    onLogin()
+    const checkLogin = async () => await onCheckLogin()
+    checkLogin()
   }, [])
 
   useEffect(() => {

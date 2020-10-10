@@ -23,11 +23,12 @@ function generateToken(member) {
   // 2. sign secret key
   // 3. options(토큰 유효일)
   // console.log({ key: process.env.JWT_SECRET_KEY })
-  const { email, id } = member
+  const { email, id, username } = member
   const token = jwt.sign(
     {
       email,
       id,
+      username,
     },
     process.env.JWT_SECRET_KEY,
     {

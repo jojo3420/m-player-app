@@ -1,26 +1,25 @@
 import React from 'react'
-// import SideMenu from 'components/layout/SideMenu'
-// import MyFooter from 'components/layout/MyFooter';
-// import MyContent from 'components/layout/MyContent'
-// import MyBreadcrumb from 'components/layout/MyBreadcrumb'
-// import MyHeaderContainer from 'containers/layout/MyHeaderContainer'
 import { appInfo } from 'lib/constant'
 import styled from 'styled-components'
 import ErrorBoundary from 'components/global/ErrorBoundary'
+import PageHeaderContainer from 'containers/auth/PageHeaderContainer'
+import PageFooter from 'components/layout/PageFooter'
+
+const Content = ({ children }) => {
+  return <ContentSection>{children}</ContentSection>
+}
 
 function MyLayout({ children }) {
   return (
     <ErrorBoundary>
-      <main>
-        <header>header</header>
-        <section>
-          <HiddenTitle>
-            <strong>{appInfo.title}</strong>
-          </HiddenTitle>
-          {children}
-        </section>
-        <footer>footer</footer>
-      </main>
+      <RootSection>
+        <HiddenTitle>
+          <strong>{appInfo.title}</strong>
+        </HiddenTitle>
+        <PageHeaderContainer />
+        <Content children={children} />
+        <PageFooter />
+      </RootSection>
     </ErrorBoundary>
   )
 }
@@ -28,5 +27,8 @@ function MyLayout({ children }) {
 const HiddenTitle = styled.h1`
   font-size: 0;
 `
+
+const RootSection = styled.section``
+const ContentSection = styled.section``
 
 export default MyLayout

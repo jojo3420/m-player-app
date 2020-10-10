@@ -2,7 +2,7 @@ import React from 'react'
 import PlayerContainer from 'containers/paly/PlayerContainer'
 import useTitle from 'lib/hooks/useTitle'
 import MyLayout from 'components/layout/MyLayout'
-import styled from 'styled-components'
+import LoginGuard from 'containers/auth/LoginGuard'
 
 function PlayerPage() {
   useTitle('Player')
@@ -13,6 +13,7 @@ function PlayerPage() {
 
   return (
     <MyLayout>
+      <LoginGuard />
       <PlayerContainer />
     </MyLayout>
   )

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react'
 import PlayList from 'components/play/PlayList'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import LoginGuard from 'containers/auth/LoginGuard'
 import { getPlayListBy, activeAlbum } from 'modules/playlist'
 import { useHistory } from 'react-router-dom'
 import PlayListForm from 'components/play/PlayListForm'
@@ -69,7 +68,6 @@ function PlayListContainer({
 
   return (
     <>
-      <LoginGuard />
       {formPageVisible ? (
         <PlayListForm
           form={{ title, description, file, setTitle, setDescription, setFile }}

@@ -5,7 +5,6 @@ import { message } from 'antd'
 import { useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import LoginGuard from 'containers/auth/LoginGuard'
 import { getMediaByPlayListId } from 'modules/playlist'
 
 function AlbumContainer({ album, getMediaByPlayListId }) {
@@ -80,7 +79,6 @@ function AlbumContainer({ album, getMediaByPlayListId }) {
 
   return (
     <>
-      <LoginGuard />
       <Album
         album={album}
         formField={formField}
