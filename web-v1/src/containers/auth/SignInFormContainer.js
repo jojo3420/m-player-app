@@ -1,58 +1,69 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { onSignIn, onCheckLogin } from 'modules/auth'
 import { message } from 'antd'
 import { connect } from 'react-redux'
 import AuthTemplate from 'components/auth/AuthTemplate'
 import { bindActionCreators } from 'redux'
-import { useForm } from 'react-hook-form'
 import SignInForm from 'components/auth/SignInForm'
+import { validationEmail } from 'lib/validator'
 
 function SignInFormContainer({ auth, signIn, check, onSignIn, onCheckLogin }) {
   const history = useHistory()
-  const { register, errors, handleSubmit } = useForm()
+  const [email, setEmail] = useState('')
+  const [pw, setPw] = useState('')
 
   const onLoginSubmit = useCallback(
-    async (formData) => {
-      const { email, pw1 } = formData
-      await onSignIn({ email, pw: pw1 })
-      await onCheckLogin()
-      message.success('로그인 성공.')
+    async (e) => {
+      e.preventDefault()
+      if (!email && !pw) return message.info('이메일 및 암호를 입력해주세요.')
+      if (!validationEmail(email)) message.info('이메일 형식을 확인해주세요.')
+      try {
+        await onSignIn({ email, pw })
+        await onCheckLogin()
+        message.success('로그인 성공.')
+      } catch (e) {
+        console.error({ e })
+      }
     },
-    [onSignIn, onCheckLogin],
+    [email, pw, onSignIn, onCheckLogin],
   )
+
   // login error 처리
   useEffect(() => {
     if (signIn.status && signIn.status >= 400) {
-      console.log({ signIn })
+      // console.log({ signIn })
       message.error(signIn.msg || '로그인이 실패 했습니다.')
     }
   }, [signIn])
 
   // login check ok
   useEffect(() => {
-    if (check.logged) {
-      console.log('login check ok.')
-    }
-  }, [check])
+    const onLogin = async () => await onCheckLogin()
+    onLogin()
+  }, [])
 
   useEffect(() => {
-    if (auth) {
-      try {
-        localStorage.setItem('auth', JSON.stringify(auth))
-      } catch (e) {
-        console.log('로그인 로컬 스토리지 저장 실패.' + e)
-      }
+    if (check.logged || auth) {
       history.push('/')
     }
-  }, [auth])
+  }, [check, auth])
+
+  const handleField = useCallback((e) => {
+    const { name, value } = e.target
+    if (name === 'email') {
+      setEmail(value)
+    } else if (name === 'pw') {
+      setPw(value)
+    }
+  }, [])
 
   return (
     <AuthTemplate>
       <SignInForm
-        register={register}
-        errors={errors}
-        handleSubmit={handleSubmit}
+        email={email}
+        pw={pw}
+        handleField={handleField}
         onSubmit={onLoginSubmit}
       />
     </AuthTemplate>

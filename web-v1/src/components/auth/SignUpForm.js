@@ -7,7 +7,18 @@ import CertificationInput from 'components/global/CertificationInput'
 import StyledInput from 'components/global/StyledInput'
 import StyledLink from 'components/global/StyledLink'
 import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
+import PropTypes from 'prop-types'
 
+SignUpForm.propTypes = {
+  step: PropTypes.bool,
+  isSend: PropTypes.bool,
+  member: PropTypes.object,
+  onChange: PropTypes.object,
+  onAvailableSubmit: PropTypes.func,
+  onSignUpFinishSubmit: PropTypes.func,
+  onSendSMS: PropTypes.func,
+  onBlurMobile: PropTypes.func,
+}
 /**
  * 회원 가입 및 로그인 폼
  * @param props

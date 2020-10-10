@@ -6,7 +6,14 @@ import Button from 'components/global/Button'
 import StyledInput from 'components/global/StyledInput'
 import StyledLink from 'components/global/StyledLink'
 import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
+import PropTypes from 'prop-types'
 
+SignInForm.propTypes = {
+  email: PropTypes.string,
+  pw: PropTypes.string,
+  handleField: PropTypes.func,
+  onSubmit: PropTypes.func,
+}
 /**
  * 회원 가입 및 로그인 폼
  * @param props
@@ -14,37 +21,32 @@ import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
  * @constructor
  */
 
-const pattern = /[\w.]+@[.\w]+\.[\w]+$/
-
-function SignInForm({ register, errors, handleSubmit, onSubmit }) {
+function SignInForm({ email, pw, handleField, onSubmit }) {
   return (
     <FormBlockWithTitle>
       <h3>로그인</h3>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <StyledInput
           type="email"
           name="email"
-          placeholder={errors.email ? '이메일 필수 입력' : '이메일 입력'}
-          ref={register({ required: true, pattern: pattern })}
+          value={email}
+          onChange={handleField}
+          placeholder={'이메일 필수 입력'}
           autoComplate="on"
         />
         <StyledInput
           type="password"
-          name="pw1"
+          name="pw"
+          value={pw}
+          onChange={handleField}
           autoComplate="off"
-          placeholder={errors.pw1 ? '암호 필수 입력' : '암호 입력'}
-          ref={register({ required: true })}
+          placeholder={'암호 필수 입력'}
         />
-        {/*<StyledCheckboxBlock>*/}
-        {/*<label htmlFor="saveCheckbox">아이디 저장</label>*/}
-        {/*<input type="checkbox" name="saveCheckbox" id="saveCheckbox" />*/}
-        {/*</StyledCheckboxBlock>*/}
         <StyledFindBlock>
           <Link to="/find/id">아이디 찾기 </Link>
           <span> | </span>
           <Link to="/find/pw">비밀번호 찾기</Link>
         </StyledFindBlock>
-
         <ButtonWithMarginTop type="submit" color="indigo" fullWidth>
           로그인 하기
         </ButtonWithMarginTop>
@@ -60,18 +62,31 @@ const ButtonWithMarginTop = styled(Button)`
   margin-top: 1.5rem;
 `
 
-const StyledCheckboxBlock = styled.div`
-  label {
-    display: inline-block;
-    font-size: 1rem;
-    margin: 0.5rem 0.3rem 0 0;
-    text-align: left;
-    cursor: pointer;
-  }
-  input:hover {
-    cursor: pointer;
-  }
-`
+{
+  /*<StyledCheckboxBlock>*/
+}
+{
+  /*<label htmlFor="saveCheckbox">아이디 저장</label>*/
+}
+{
+  /*<input type="checkbox" name="saveCheckbox" id="saveCheckbox" />*/
+}
+{
+  /*</StyledCheckboxBlock>*/
+}
+
+// const StyledCheckboxBlock = styled.div`
+//   label {
+//     display: inline-block;
+//     font-size: 1rem;
+//     margin: 0.5rem 0.3rem 0 0;
+//     text-align: left;
+//     cursor: pointer;
+//   }
+//   input:hover {
+//     cursor: pointer;
+//   }
+// `
 
 const StyledFindBlock = styled.div`
   text-align: right;

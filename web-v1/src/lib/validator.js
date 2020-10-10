@@ -1,3 +1,5 @@
+export const emailPattern = /[\w.]+@[.\w]+\.[\w]+$/
+
 // 휴대폰 번호 형식 체크
 export function validationMobile(mobile) {
   if (!mobile.includes('-')) {
@@ -11,6 +13,5 @@ export function validationMobile(mobile) {
 
 // TODO - 더욱 정교하게 개선 피리요함
 export function validationEmail(email) {
-  const pattern = /[\w.]+@[.\w]+\.[\w]+$/i
-  return pattern.test(email)
+  return emailPattern.test(email)
 }

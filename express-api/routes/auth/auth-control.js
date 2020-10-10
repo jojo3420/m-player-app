@@ -92,10 +92,14 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
   const { email, pw } = req.body
+  // console.log({ email, pw })
   try {
     const member = await Member.findOne({
+      attributes: ['id', 'email', 'pw', 'username', 'mobile'],
       where: { email },
     })
+    // console.log({ member })
+
     if (!member) {
       res.status(401).json({
         msg: '가입 되지 않은 이메일 입니다.',
@@ -103,7 +107,6 @@ exports.signIn = async (req, res, next) => {
       })
       return
     }
-
     const check = await checkPw(pw, member.pw)
     if (!check) {
       res.status(401).json({
@@ -111,13 +114,11 @@ exports.signIn = async (req, res, next) => {
       })
       return
     }
-
     const token = generateToken(member)
     res.cookie('access_token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
     })
-
     res.json(serialize(member))
   } catch (e) {
     next(e)

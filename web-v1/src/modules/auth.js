@@ -118,8 +118,9 @@ const auth = handleActions(
       }),
     [SIGN_IN_FAILURE]: (state, { e, error, response }) =>
       produce(state, (draft) => {
+        console.log({ e, error, response })
         draft.auth = null
-        draft.signIn.msg = response.data.msg
+        draft.signIn.msg = response.data.msg || e.message
         draft.signIn.status = response.status
         draft.signIn.e = e
         draft.signIn.error = error
