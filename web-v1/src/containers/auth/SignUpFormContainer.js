@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux'
 import useTextInput from 'lib/hooks/useTextInput'
 import SignUpForm from 'components/auth/SignUpForm'
 import bcrypt from 'bcryptjs'
-import { validationMobile } from 'lib/validator'
+import { validationEmail, validationMobile } from 'lib/validator'
 
 function SignUpFormContainer({
   auth,
@@ -33,13 +33,16 @@ function SignUpFormContainer({
   const onAvailableSubmit = useCallback(
     async (e) => {
       e.preventDefault()
-      if (pw1 !== pw2) return message.error('패스워드가 불일치 합니다.')
+      if (pw1 !== pw2) return message.warn('암호가 불일치 합니다.')
+      if (!validationEmail(email))
+        return message.warn('이메일 형식을 확인해주세요.')
+
       try {
         await onIsAvailable({ email, pw: pw1 })
         setStep(1)
         setIsSend(false)
       } catch (error) {
-        // console.log({ error })
+        console.log({ error })
         message.warn(
           (error && error.response.data.msg) || '회원 가입이 실패했습니다.',
         )

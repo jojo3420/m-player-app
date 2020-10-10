@@ -14,6 +14,8 @@ import FormBlockWithTitle from 'components/global/FormBlockWithTitle'
  * @constructor
  */
 
+const pattern = /[\w.]+@[.\w]+\.[\w]+$/
+
 function SignInForm({ register, errors, handleSubmit, onSubmit }) {
   return (
     <FormBlockWithTitle>
@@ -21,10 +23,10 @@ function SignInForm({ register, errors, handleSubmit, onSubmit }) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <StyledInput
           type="email"
-          // autoComplate="email"
           name="email"
           placeholder={errors.email ? '이메일 필수 입력' : '이메일 입력'}
-          ref={register({ required: true })}
+          ref={register({ required: true, pattern: pattern })}
+          autoComplate="on"
         />
         <StyledInput
           type="password"
