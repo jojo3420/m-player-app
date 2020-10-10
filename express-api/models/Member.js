@@ -13,13 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       username: {
         field: 'username',
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(150),
         allowNull: true,
       },
       mobile: {
         type: DataTypes.STRING(20),
         allowNull: false,
         unique: true,
+      },
+      mobileCountryCode: {
+        // +82: 한국,  +1: 미국, +216: 튀니지
+        type: DataTypes.STRING(4),
+        allowNull: true,
       },
       emailPass: {
         field: 'email_pass',
