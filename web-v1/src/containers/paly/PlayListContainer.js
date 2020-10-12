@@ -42,9 +42,10 @@ function PlayListContainer({
     const windowInnerHeight = window.innerHeight
     const windowScrollY = window.scrollY
     const windowHeightTotal = windowInnerHeight + windowScrollY
-    const mainOffsetHeight = document.querySelector('main').offsetHeight
+    const mainOffsetHeight = document.querySelector('.root-section')
+      .offsetHeight
     if (windowHeightTotal === mainOffsetHeight) {
-      // console.log('fetch')
+      console.log('fetch')
       setPage((page) => page + 1)
     }
   }, [])

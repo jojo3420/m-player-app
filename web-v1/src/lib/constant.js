@@ -4,6 +4,11 @@ export const msg = {
   noVideo: '',
 }
 
-export const appInfo = {
-  title: '플레이리스트 M',
+// export const appInfo = {
+//   title: '플레이리스트 M',
+// }
+
+export const appName = {
+  ko: '플레이리스트 M',
+  en: 'PlayList M',
 }

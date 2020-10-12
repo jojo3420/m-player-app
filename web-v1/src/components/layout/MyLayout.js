@@ -1,5 +1,5 @@
 import React from 'react'
-import { appInfo } from 'lib/constant'
+import { appName } from 'lib/constant'
 import styled from 'styled-components'
 import ErrorBoundary from 'components/global/ErrorBoundary'
 import PageHeaderContainer from 'containers/auth/PageHeaderContainer'
@@ -12,9 +12,11 @@ const Content = ({ children }) => {
 function MyLayout({ children }) {
   return (
     <ErrorBoundary>
-      <RootSection>
+      <RootSection className="root-section">
         <HiddenTitle>
-          <strong>{appInfo.title}</strong>
+          <strong>
+            <strong>{appName.ko}</strong>
+          </strong>
         </HiddenTitle>
         <PageHeaderContainer />
         <Content children={children} />

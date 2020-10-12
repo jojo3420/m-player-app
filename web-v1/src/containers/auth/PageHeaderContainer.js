@@ -21,7 +21,7 @@ function PageHeaderContainer({}) {
   }, [])
 
   const username = useMemo(() => {
-    console.log({ auth })
+    // console.log({ auth })
     return (auth && auth.username) || ''
   }, [auth])
 

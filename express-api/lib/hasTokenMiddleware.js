@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const hasTokenMiddleware = async (req, res, next) => {
   const token = req.cookies['access_token']
-  console.log({ token })
+  // console.log({ token })
   if (!token) {
     return next({
       message: 'noPermissions',

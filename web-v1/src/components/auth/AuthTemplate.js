@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import palette from 'lib/styles/palette'
 import { Link } from 'react-router-dom'
-import { appInfo } from 'lib/constant'
+import { appName } from 'lib/constant'
 
 /**
  */
@@ -11,7 +11,7 @@ const AuthTemplate = ({ children }) => {
     <AuthTemplateBlock>
       <WhiteBox>
         <div className="sub-title">
-          <Link to="/about">{appInfo.title}</Link>
+          <Link to="/">{appName.en}</Link>
         </div>
         {children}
       </WhiteBox>
