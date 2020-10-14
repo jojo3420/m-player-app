@@ -95,6 +95,7 @@ export default function SignUpForm({
             minLength={10}
             maxLength={40}
             required={true}
+            autoFocus
           />
           <StyledInput
             type="password"

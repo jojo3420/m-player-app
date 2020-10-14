@@ -8,6 +8,7 @@ import PlayListForm from 'components/play/PlayListForm'
 import StyledLink from 'components/global/StyledLink'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import DriveInfo from 'components/DriveInfo'
 // import { message } from 'antd'
 // import { useForm } from 'react-hook-form'
 
@@ -84,6 +85,7 @@ function PlayListContainer({
               <Link to="#">신규 추가</Link>
             </StyledLink>
           </div>
+          <DriveInfo current={20} />
           <PlayList
             playList={playList}
             loading={loadingPlayList}

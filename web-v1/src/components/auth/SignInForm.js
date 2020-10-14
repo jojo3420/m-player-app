@@ -33,6 +33,7 @@ function SignInForm({ email, pw, handleField, onSubmit }) {
           onChange={handleField}
           placeholder={'이메일 필수 입력'}
           autoComplate="on"
+          autoFocus
         />
         <StyledInput
           type="password"

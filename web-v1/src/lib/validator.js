@@ -1,4 +1,4 @@
-export const emailPattern = /[\w.]+@[.\w]+\.[\w]+$/
+export const emailPattern = /\w+[\w.]*@[\w.]+\.[\w]+$/
 
 // 휴대폰 번호 형식 체크
 export function validationMobile(mobile) {
