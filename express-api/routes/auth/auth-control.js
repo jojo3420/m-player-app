@@ -1,4 +1,4 @@
-const { Member } = require('../../models')
+const { Member, SmsHistory } = require('../../models')
 const {
   hashPw,
   generateToken,
@@ -49,8 +49,8 @@ exports.isAvailableEmail = async (req, res, next) => {
  * @return {Promise<void>}
  */
 exports.signUp = async (req, res, next) => {
-  const { email, pw, mobile, username } = req.body
-  console.log({ email, pw, mobile, username })
+  const { email, pw, mobile, username, certificationNo } = req.body
+  // console.log({ email, pw, mobile, username })
 
   // email 중복 검사
   const alreadyMember = await Member.findOne({
@@ -70,10 +70,23 @@ exports.signUp = async (req, res, next) => {
     const member = await Member.create({
       email,
       pw: hashedPw,
-      mobile,
+      mobile: mobile.replace(/-/g, ''),
       username,
       smsPass: true,
     })
+
+    await SmsHistory.update(
+      {
+        status: 2, // 2: 인증 완료
+      },
+      {
+        where: {
+          certificationNo: certificationNo,
+          to: mobile.replace(/-/g, ''),
+        },
+      },
+    )
+
     const token = generateToken(member)
     res.cookie('access_token', token, {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 유지 기간 7days

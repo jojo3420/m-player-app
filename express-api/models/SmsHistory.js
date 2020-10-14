@@ -18,11 +18,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(500),
         allowNull: false,
       },
-      // status: {
-      // 0: 전송 후 매칭X, 2: 사용완료
-      // type: DataTypes.INTEGER,
-      // allowNull: false,
-      // },
+      status: {
+        // 0: 전송 후 매칭X, 2: 사용완료 , 9: 비장상 처리
+        type: DataTypes.SMALLINT,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
     {
       timestamps: true,

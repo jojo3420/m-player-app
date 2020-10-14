@@ -51,6 +51,7 @@ const signUpSchema = Joi.object({
   pw: Joi.string().required(),
   username: Joi.string().required(),
   mobile: Joi.string().required(),
+  certificationNo: Joi.string(),
 })
 
 const signInSchema = Joi.object({

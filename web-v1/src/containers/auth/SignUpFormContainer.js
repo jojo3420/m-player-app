@@ -55,7 +55,6 @@ function SignUpFormContainer({
       e.preventDefault()
       if (isMobileValid) {
         try {
-          // Saga actionCreator는  예외가 던져 지지 않음
           await sendSMS({ to: mobile.replace(/-/g, ''), type: 'auth' })
           setIsSend(true)
         } catch (err) {
@@ -84,7 +83,7 @@ function SignUpFormContainer({
       // console.log({ serverNo, certificationNo })
       const isMatch = await bcrypt.compare(certificationNo, serverNo)
       if (isMatch) {
-        await onSignUp({ email, pw: pw1, username, mobile })
+        await onSignUp({ email, pw: pw1, username, mobile, certificationNo })
         await onCheckLogin()
         message.success('회원가입 성공!')
       } else {

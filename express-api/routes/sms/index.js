@@ -46,6 +46,7 @@ router.post('/send', async function (req, res, next) {
           to,
           certificationNo: random,
           log: message,
+          status: 0, // 0: 요청, 2:인증완료, 9: 비정상
         })
         res.status(200).json({
           msg: 'SEND_OK',

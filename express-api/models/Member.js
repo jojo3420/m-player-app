@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      mobileCountryCode: {
-        // +82: 한국,  +1: 미국, +216: 튀니지
-        type: DataTypes.STRING(4),
-        allowNull: true,
-      },
+      // mobileCountryCode: {
+      //   // +82: 한국,  +1: 미국, +216: 튀니지
+      //   type: DataTypes.STRING(4),
+      //   allowNull: true,
+      // },
       emailPass: {
         field: 'email_pass',
         type: DataTypes.BOOLEAN,
