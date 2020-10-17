@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import { Card, Col, Row } from 'antd'
 import useTitle from 'lib/hooks/useTitle'
 import StyledSpinner from 'components/global/StyledSpinner'
+// import StyledLink from 'components/global/StyledLink'
+// import { Link } from 'react-router-dom'
+// import DriveInfo from 'components/DriveInfo'
+// import PlayListFormContainer from 'components/player/PlayListFormContainer'
 const { Meta } = Card
 
 PlayList.propTypes = {
@@ -10,7 +14,7 @@ PlayList.propTypes = {
   gotoDetail: PropTypes.func,
 }
 
-function PlayList({ playList, loading, gotoDetail }) {
+function PlayList({ playList, loading, gotoDetail, setFormPageVisible }) {
   useTitle('플레이리스트 목록')
 
   if (Array.isArray(playList) && playList.length === 0) {

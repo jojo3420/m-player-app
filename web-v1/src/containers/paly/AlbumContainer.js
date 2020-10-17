@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import Album from 'components/play/Album'
+import Album from 'components/player/Album'
 import axios from 'axios'
 import { message } from 'antd'
 import { useParams } from 'react-router-dom'
@@ -78,15 +78,13 @@ function AlbumContainer({ album, getMediaByPlayListId }) {
   )
 
   return (
-    <>
-      <Album
-        album={album}
-        formField={formField}
-        handleField={handleField}
-        handleAudios={handleAudios}
-        onSubmitFileSave={onSubmitFileSave}
-      />
-    </>
+    <Album
+      album={album}
+      formField={formField}
+      handleField={handleField}
+      handleAudios={handleAudios}
+      onSubmitFileSave={onSubmitFileSave}
+    />
   )
 }
 export default connect(

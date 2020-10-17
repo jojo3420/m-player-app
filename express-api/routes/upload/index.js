@@ -1,5 +1,5 @@
 const express = require('express')
-const upload = require('./fileupload')
+const { audioUpload: upload } = require('./fileupload')
 const {
   singleUpload,
   multiUpload,

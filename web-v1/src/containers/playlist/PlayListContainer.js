@@ -1,16 +1,10 @@
 import React, { useCallback, useEffect, useState, useLayoutEffect } from 'react'
-import PlayList from 'components/play/PlayList'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { useHistory, Link } from 'react-router-dom'
 import { getPlayListBy, activeAlbum } from 'modules/playlist'
-import { useHistory } from 'react-router-dom'
-import PlayListForm from 'components/play/PlayListForm'
-import StyledLink from 'components/global/StyledLink'
-import { Link } from 'react-router-dom'
+import PlayList from 'components/playlist/PlayList'
 import PropTypes from 'prop-types'
-import DriveInfo from 'components/DriveInfo'
-// import { message } from 'antd'
-// import { useForm } from 'react-hook-form'
 
 PlayListContainer.propTypes = {
   auth: PropTypes.object,
@@ -27,11 +21,6 @@ function PlayListContainer({
   activeAlbum,
 }) {
   const history = useHistory()
-  const [formPageVisible, setFormPageVisible] = useState(false)
-  // const { register, handleSubmit, watch, errors } = useForm()
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [file, setFile] = useState(null)
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -58,10 +47,6 @@ function PlayListContainer({
     auth && fetch(auth.email, page)
   }, [auth, page])
 
-  const onCreatePlaylist = useCallback((e) => {
-    e.preventDefault()
-  }, [])
-
   const gotoDetail = useCallback((album) => {
     const { id } = album
     history.push(`/playlist/${id}`)
@@ -69,31 +54,11 @@ function PlayListContainer({
   }, [])
 
   return (
-    <>
-      {formPageVisible ? (
-        <PlayListForm
-          form={{ title, description, file, setTitle, setDescription, setFile }}
-          onSubmit={onCreatePlaylist}
-          onCancel={() => setFormPageVisible(false)}
-        />
-      ) : (
-        <>
-          <div style={{ position: 'absolute', left: 5, top: 10 }}>
-            <StyledLink
-              onClick={() => setFormPageVisible((visible) => !visible)}
-            >
-              <Link to="#">신규 추가</Link>
-            </StyledLink>
-          </div>
-          <DriveInfo current={20} />
-          <PlayList
-            playList={playList}
-            loading={loadingPlayList}
-            gotoDetail={gotoDetail}
-          />
-        </>
-      )}
-    </>
+    <PlayList
+      playList={playList}
+      loading={loadingPlayList}
+      gotoDetail={gotoDetail}
+    />
   )
 }
 

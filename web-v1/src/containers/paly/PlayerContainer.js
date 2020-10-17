@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import Player from 'components/play/player'
+import Player from 'components/player/player'
 import { calcAudioDuration } from 'lib/util'
 import { chain, add, multiply, round, divide } from 'mathjs'
 import { message } from 'antd'
@@ -58,7 +58,7 @@ function PlayerContainer({}) {
     })
 
     // 재생 완료후 오디오 초기화 하기
-    // play seek = 0, usedSecond = 0, restSecond = 0
+    // player seek = 0, usedSecond = 0, restSecond = 0
     // humanUsedSecond = '0:00' humanRestSecond=?
     // duration=현재 재생곡으로 듀레이션 유지하거나, 다음 곡 듀레이션으로 변경 (자동재생 모드에따라 결정)
     audioObj.addEventListener('ended', (e) => {
@@ -256,7 +256,7 @@ function stopSong(audio, setIsPlay) {
 }
 
 // 재생 완료후 오디오 초기화 하기
-// play seek = 0, usedSecond = 0, restSecond = 0
+// player seek = 0, usedSecond = 0, restSecond = 0
 // humanUsedSecond = '0:00' humanRestSecond=?
 // duration=현재 재생곡으로 듀레이션 유지하거나, 다음 곡 듀레이션으로 변경 (자동재생 모드에따라 결정)
 // isPlay=false

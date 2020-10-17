@@ -11,14 +11,15 @@ function generatorRandom(length) {
 }
 
 function transformToInnerList(list, split = 4) {
+  if (!list) return
+  if (list.length === 0) return list
+
   const newList = []
   const count = Math.ceil(list.length / split)
-
   for (let i = 0; i < count; i++) {
     const innerList = list.splice(0, split)
     newList.push(innerList)
   }
-
   return newList
 }
 
@@ -26,7 +27,7 @@ function initDB(cnt = 0) {
   _.range(cnt).map((index) => {
     PlayList.create({
       title: 'my story#' + index,
-      email: `$user-{index}@test.com`,
+      email: `jjjhhhvvv@naver.com`,
       created: new Date(),
       updated: new Date(),
       memberId: 1,

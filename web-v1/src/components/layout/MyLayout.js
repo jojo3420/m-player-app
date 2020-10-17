@@ -20,7 +20,7 @@ function MyLayout({ children }) {
         </HiddenTitle>
         <PageHeaderContainer />
         <Content children={children} />
-        <PageFooter />
+        {/*<PageFooter />*/}
       </RootSection>
     </ErrorBoundary>
   )

@@ -4,7 +4,7 @@ import AlbumContainer from 'containers/paly/AlbumContainer'
 import MyLayout from 'components/layout/MyLayout'
 
 export default function AlbumPage() {
-  useTitle('Playlist Detail')
+  useTitle('상세 플레이리스트')
 
   return (
     <MyLayout>
